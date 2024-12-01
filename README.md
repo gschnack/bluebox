@@ -1,4 +1,0 @@
-# bluebox
-
-# Bluetooth Box 
-
