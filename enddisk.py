@@ -858,23 +858,25 @@ def power_plate():
 	# outer rectangular 28 x 12
 	#Part.show(rect(0 , 0 ,12.,14. ))
 	# outer rectangular 28 x 12
-	Part.show(rect(0 , 0 ,12.,18. ))
+	Part.show(rect(0 , 0 ,12.5,33. ))
 
 
 
 	# USB connector 
-	usbheight= 1.1
-	usbwidth = 8
+	usbheight= 3.2
+	usbwidth = 9.5
 
-	Part.show( arcrect( 0, -4, usbwidth , usbheight,  .5))
+	Part.show( arcrect( 0, -33. /2. +8.5 , usbwidth , usbheight,  1. ))
+	
+	
 	#light indicator	
-	Part.show( arcrect( 0, -1 , usbwidth , usbheight,  .5))
+	Part.show( arcrect( 0, -33. /2. +12.5 , 5.5 , 2.1 , 1.))
 
 	# switch
-	Part.show( rect( 0, 3 , 3. ,3.  ))
+	Part.show( rect( 0, -33. /2. +22.5 , 5. ,5.  ))
 
-	fix1 = Part.Circle(Base.Vector(centerx,centery- 7 ,0),Base.Vector(0,0,1),1.)
-	fix2 = Part.Circle(Base.Vector(centerx,centery+ 7 ,0),Base.Vector(0,0,1),1.)
+	fix1 = Part.Circle(Base.Vector(centerx,centery- (33. /2.  -2 ),0 ),Base.Vector(0,0,1),1.1)
+	fix2 = Part.Circle(Base.Vector(centerx,centery+ (33. /2.  -2) ,0),Base.Vector(0,0,1),1.1)
 	Part.show(fix1.toShape())
 	Part.show(fix2.toShape())
 
@@ -1043,12 +1045,12 @@ def amp_plate():
 	# outer rectangular 28 x 12
 	#Part.show(rect(0 , 0 ,12.,14. ))
 	# outer rectangular 28 x 12
-	Part.show(rect(0 , 0 ,12.,18. ))
+	Part.show(rect(0 , 0 ,12.5,33 ))
 
 	
 	# for switches
-	sw1 = Part.Circle(Base.Vector(centerx-3,centery- 3 ,0),Base.Vector(0,0,1),1.)
-	sw2 = Part.Circle(Base.Vector(centerx-3,centery+ 3 ,0),Base.Vector(0,0,1),1.)
+	sw1 = Part.Circle(Base.Vector(centerx-3,centery- 7.5 ,0),Base.Vector(0,0,1),1.6)
+	sw2 = Part.Circle(Base.Vector(centerx-3,centery+ 7.5 ,0),Base.Vector(0,0,1),1.6)
 
 	Part.show(sw1.toShape())
 	Part.show(sw2.toShape())
@@ -1056,12 +1058,13 @@ def amp_plate():
 
 	
 	#led 
-	Part.show( arcrect( 2, 0, 3 , 10,  1.))
+	Part.show( arcrect( 12.5/ 2.- 3 , 0, 2.2 , 5,  1.05))
 
 
 	# holes 
-	fix1 = Part.Circle(Base.Vector(centerx,centery- 7 ,0),Base.Vector(0,0,1),1.)
-	fix2 = Part.Circle(Base.Vector(centerx,centery+ 7 ,0),Base.Vector(0,0,1),1.)
+	
+	fix1 = Part.Circle(Base.Vector(centerx,centery- (33. /2.  -2 ),0 ),Base.Vector(0,0,1),1.1)
+	fix2 = Part.Circle(Base.Vector(centerx,centery+ (33. /2.  -2) ,0),Base.Vector(0,0,1),1.1)
 	Part.show(fix1.toShape())
 	Part.show(fix2.toShape())
 
@@ -1069,8 +1072,7 @@ def amp_plate():
 
 
 
-
-a = 8
+a = 10
 
 
 if a ==1 :
