@@ -1068,11 +1068,297 @@ def amp_plate():
 	Part.show(fix1.toShape())
 	Part.show(fix2.toShape())
 
+def calc_ts_beta(alpha, d_half):
+	
+	#d_half = (outer_radius-inner_radius)/ 2.
+	
+	plate_angle = alpha #  22.5 # degree, alpha
+	
+	#plate_angle = 45. # degree, alpha
+	
+	
+	
+	
+	a= math.tan(plate_angle*math.pi / 180. )
+	b = inner_radius + d_half
+	
+	print("a",a )
+	print("b",b )
+	
+	
+	
+	p = -2. * b/(a*( 1.+ 1./(a**2 )))
+	q = (b**2 -inner_radius**2) /( 1.+ 1. /(a**2) ) 
+	
+	#p = -5
+	#q = 6
+	
+	z1 = -0.5 *p  + math.sqrt(p**2 / 4.0 - q) 
+	z2 = -0.5 *p  - math.sqrt(p**2 / 4.0 - q ) 
+	
+	
+	print("z1",z1 )
+	
+	print("z2",z2)
+	
+	z = z2
+	print("z",z)
+	
+	
+	beta = math.asin(z/inner_radius) 
+	print("beta", beta* 180 / math.pi )
+	x = z/ math.tan(plate_angle*math.pi / 180. )
+	y = inner_radius* math.cos(beta)
+	
+	print("d_half", d_half )
+	print("x", x)
+	print("y", y)
+	print("Ri + d/2", inner_radius+d_half, x+y )
+	
+	return beta* 180 / math.pi
 
 
 
 
-a = 10
+# This file calculates an angle at the thales circle
+# Th circle has a radius ra in the IV and III quadrant 
+# and midpoint M. At a distance of x from M to the left a 
+# line under an angle of alpha is drawn to the III quadrant
+# the line crosses the thales circle at a point. This file calculates 
+# the angle from the midpoint M to this new point 
+
+
+def calc_ts_beta_outer(alpha,x):
+	a= math.tan(alpha*math.pi / 180. )
+	r= outer_radius
+	p =  2.*x/( (1/a**2 +1.) * a )
+	q = (x**2 -r**2 ) /(1/(a**2) +1 ) 
+
+	h1 = -0.5 *p  + math.sqrt(p**2 / 4.0 - q) 
+	h2 = -0.5 *p  - math.sqrt(p**2 / 4.0 - q ) 
+
+	h = h1
+	valid = (h**2 ) *( (1/a**2) +1) + h*2*x/a -r**2+ x**2
+	print("valid h1 ",valid )
+	h= h1 
+
+	print("h1", h1 )
+
+	y= h/a
+
+	print("y",y )
+	z = h **2 /(x + y + r ) 
+	print("x,y,z",x+y +z,"r", outer_radius )
+	beta1 =180/math.pi * math.atan( h/( x+y ) )
+	print( "beta in grad", beta1)
+
+	return( beta1)
+
+
+
+# inner arc v0 is   
+#
+#
+
+
+def two_speakers_disk():
+	global thick_plate
+	global deltax		
+
+	#global plate_left_upper
+	#global plate_left_lower
+	#global plate_right_upper
+	#global plate_right_lower
+
+	#ts = two speakers
+
+	d_half = (outer_radius-inner_radius)/ 2.
+	anchor_x = d_half + inner_radius
+
+
+	ts_alpha = 40
+	ts_beta = calc_ts_beta(ts_alpha, d_half)
+	#ts_beta = 30.
+	
+	#thickness is  4
+	
+	plate_off = 4./ math.sin( ts_alpha/180*math.pi)
+	print("plate_off", plate_off) 
+	print("my x", inner_radius+ d_half+ plate_off)
+
+	ts_beta_outer = calc_ts_beta_outer(ts_alpha, inner_radius+ d_half+ plate_off )
+	#ts_beta = 10.0
+	
+	
+	
+	inner_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),inner_radius)
+	arc2 = Part.Arc(inner_circle, ( -ts_beta ) /180. *pi,(ts_beta+180. )/180. *pi  )
+	
+	arc2s=arc2.toShape()
+
+	outer_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius)
+#	arc1 = Part.Arc(outer_circle, 150/180. *pi,30/180. *pi  )
+	arc1 = Part.Arc(outer_circle, (ts_beta_outer) /180. *pi, (-ts_beta_outer +180. )/180. *pi  )
+	#arc1 = Part.Arc(outer_circle, (-ts_beta_outer) /180. *pi, (ts_beta_outer +180. )/180. *pi  )
+	
+	
+	
+	Part.show(arc1.toShape())
+	Part.show(arc2.toShape())
+	
+	#right half
+	v0=arc2.StartPoint
+	v1 = Base.Vector(anchor_x,0.,0)		
+	l1=Part.LineSegment(v0,v1 )
+	l1s=l1.toShape();
+	Part.show(l1s)
+	
+	dir = v0 - v1
+	dirnorm= dir.normalize() # points downwards
+
+	ortho_dir = Base.Vector(-dir.y,dir.x,0).normalize() # points to the right up
+	thick =ortho_dir.normalize().multiply(4.) 	
+	v2 = v1.add(thick) # thickness power plate 
+	l2=Part.LineSegment(v1,v2 )
+	l2s=l2.toShape();
+	Part.show(l2s)
+	
+	v3=arc1.StartPoint
+	
+	l3=Part.LineSegment(v2,v3 )
+	l3s=l3.toShape();
+	Part.show(l3s)
+	
+	# left half
+	v10=arc2.EndPoint
+	v11 = Base.Vector(-anchor_x,0.,0)		
+	l10=Part.LineSegment(v10,v11 )
+	l10s=l10.toShape();
+	Part.show(l10s)
+	
+	dir = v10 - v11
+	dirnorm= dir.normalize() # points downwards
+
+	ortho_dir = Base.Vector(-dir.y,dir.x,0).normalize() # points to the right up
+	thick =ortho_dir.normalize().multiply(-4.) 	
+	v12 = v11.add(thick) # thickness power plate 	
+	l12=Part.LineSegment(v11,v12 )
+	l12s=l12.toShape();
+	Part.show(l12s)
+	
+	v13=arc1.EndPoint
+	
+	l13=Part.LineSegment(v12,v13 )
+	l13s=l13.toShape();
+	Part.show(l13s)
+	
+	
+	
+	hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
+	#pocket= Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),pocket_radius)
+		
+		
+		
+	hole_wire1 = Part.Wire([ hole.toShape() ] )
+	hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20. )
+	hole_wire2 = Part.Wire([ hole.toShape() ] )
+	hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160. )
+	hole_wire3 = Part.Wire([ hole.toShape() ] )
+	hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
+
+			
+	Part.show( hole_wire1)
+	Part.show( hole_wire2)
+	Part.show( hole_wire3)
+	
+	
+	if 0:
+		
+		arc1s = arc1.toShape()
+	
+		v0=arc1.EndPoint
+		 	
+		v1 = Base.Vector(v0.x - deltax , v0.y,0.  )
+		v2 = Base.Vector(v1.x , v1.y - thick_plate ,0.  )
+		v3 = arc2.EndPoint
+	
+		plate_right_upper = v2
+		plate_right_lower = v1
+	
+	
+		v9=arc1.StartPoint
+		v8=Base.Vector(v9.x + deltax , v9.y,0.  )	
+		v7 = Base.Vector(v8.x , v8.y - thick_plate ,0.  )
+		v6 = arc2.StartPoint
+		
+	
+		plate_left_upper = v7
+		plate_left_lower = v8
+	
+		#v8 = Base.Vector(v9.x +deltax, v9.y,0.  )
+		#v7 = Base.Vector(v8.x, v8.y -thick_plate ,0.  )
+		
+		l1=Part.LineSegment(v0,v1 )
+		l1s=l1.toShape();
+	
+		l2=Part.LineSegment(v1,v2 )
+		l2s=l2.toShape();
+		
+		l3=Part.LineSegment(v2,v3 )
+		l3s=l3.toShape();
+	
+		l9=Part.LineSegment(v9,v8 )
+		l9s=l9.toShape();
+	
+		l8=Part.LineSegment(v8,v7 )
+		l8s=l8.toShape();
+	
+		l7=Part.LineSegment(v7,v6 )
+		l7s=l7.toShape();
+	
+	
+	
+		W1 = Part.Wire([l9s, l8s,l7s,arc1s, l1s, l2s,l3s, arc2s ] )
+		#W2 = Part.Wire([l9s, l8s,l7s ] )
+	
+	
+		#Part.show( W2)
+	
+	
+	
+		hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
+		pocket= Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),pocket_radius)
+		
+		
+		
+		hole_wire1 = Part.Wire([ hole.toShape() ] )
+		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20. )
+		hole_wire2 = Part.Wire([ hole.toShape() ] )
+		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160. )
+		hole_wire3 = Part.Wire([ hole.toShape() ] )
+		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
+			
+		#Part.show( inner_circle.toShape() )
+		#Part.show( outer_circle.toShape() )
+		
+	
+		if ( show == 1 ):
+			Part.show( W1)
+			
+			#Part.show( arc2.toShape() )
+			
+			Part.show( hole_wire1)
+			Part.show( hole_wire2)
+			Part.show( hole_wire3)
+			
+
+
+
+
+
+
+
+a = 11
 
 
 if a ==1 :
@@ -1086,7 +1372,7 @@ if a ==2 :
 	print( width_plate)	
 	speaker_disk(1)
 
-
+	Part.show( rect( 0,0,120,120 ) )
 
 if a == 3:
 	calcalpha()
@@ -1126,5 +1412,8 @@ if a == 9:
 if a == 10: 
 	amp_plate()
 
+
+if a == 11: 
+	two_speakers_disk()
 
 
