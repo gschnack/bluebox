@@ -1165,18 +1165,14 @@ def two_speakers_disk():
 	global thick_plate
 	global deltax		
 
-	#global plate_left_upper
-	#global plate_left_lower
-	#global plate_right_upper
-	#global plate_right_lower
-
 	#ts = two speakers
 
 	d_half = (outer_radius-inner_radius)/ 2.
 	anchor_x = d_half + inner_radius
 
 
-	ts_alpha = 40
+
+	ts_alpha = 40  # change this 
 	ts_beta = calc_ts_beta(ts_alpha, d_half)
 	#ts_beta = 30.
 	
@@ -1272,93 +1268,386 @@ def two_speakers_disk():
 	Part.show( hole_wire3)
 	
 	
-	if 0:
+
+def two_speakers_disk_protect(protect):
+	global thick_plate
+	global deltax		
+
+	#ts = two speakers
+################################
+#circles arcs and calculations
+
+	d_half = (outer_radius-inner_radius)/ 2.
+	anchor_x = d_half + inner_radius
+
+	#the flange is the length of the plate starting from the inner circle to the end of the plate 
+	flange = 5.
+
+	# length of plate without offsets
+	length = sqrt( (inner_radius+ d_half )**2 + (inner_radius)**2  )
+
+	ts_alpha = 180 / math.pi * math.atan( inner_radius / (inner_radius+ d_half ) )
+
+
+	#ts_alpha = 45  # change this 
+	ts_beta = calc_ts_beta(ts_alpha, d_half)
+	#ts_beta = 30.
+	
+	h = inner_radius * math.sin( ts_beta /180. *math.pi )
+	print("h in twosp_prot", h ) 
+	x = inner_radius * math.cos( ts_beta /180. *math.pi )
+	y = inner_radius +d_half -x
+	
+	e = sqrt ( y **2 + h**2 )
+	print("e in twosp_prot", e ) 
+	
+	
+	#thickness is  4
+	
+	plate_off = 4./ math.sin( ts_alpha/180*math.pi)
+	print("plate_off", plate_off) 
+	print("my x", inner_radius+ d_half+ plate_off)
+
+	ts_beta_outer = calc_ts_beta_outer(ts_alpha, inner_radius+ d_half+ plate_off )
+	#ts_beta = 10.0
+	
+	
+	
+	inner_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),inner_radius)
+	arc2 = Part.Arc(inner_circle, ( -ts_beta ) /180. *pi,(ts_beta+180. )/180. *pi  )
+	
+	arc2s=arc2.toShape()
+	Part.show(arc2.toShape())
+	
+	
+
+	outer_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius)
+	
+	if protect == 1 :
+	# insert this for a protecting disk 
+		Part.show(outer_circle.toShape())
+	
+
+	#arc1 = Part.Arc(outer_circle, 150/180. *pi,30/180. *pi  )
+	#arc1 = Part.Arc(outer_circle, (ts_beta_outer) /180. *pi, (-ts_beta_outer +180. )/180. *pi  )
+	arc1 = Part.Arc(outer_circle, (-ts_beta) /180. *pi, (ts_beta  +180. )/180. *pi  )
+	
+	
+	
+	if protect == 0: 
+		Part.show(arc1.toShape())
+	
+	
+	if protect == 2: 
+		arc_out_join = Part.Arc(outer_circle, (-ts_beta-90) /180. *pi, (ts_beta  -90. )/180. *pi  )
+		Part.show(arc_out_join.toShape())
+	
+	
+	
+	epsilon = 90 -(ts_alpha +ts_beta ) 
+	# thickness = 4
+	
+#####################
+	#right half
+#####################
+	
+	v0=arc2.StartPoint
+	v1 = Base.Vector(anchor_x,0.,0)	
+	
+			
+				
+	#l1=Part.LineSegment(v0,v1 )
+	#l1s=l1.toShape();
+	#Part.show(l1s)
+	
+	dir = v0 - v1
+	dirnorm= dir.normalize() # points downwards
+	inwards = dirnorm.normalize().multiply(flange) 
+	v1 = v0.add( -inwards ) 
+	l1=Part.LineSegment(v0,v1 )
+	l1s=l1.toShape();
+	Part.show(l1s)
+	
+	dir = v0 - v1
+	dirnorm= dir.normalize() 
+	ortho_dir = Base.Vector(-dir.y,dir.x,0).normalize() # points to the right up
+	thick =ortho_dir.normalize().multiply(4.) 	
+	v2 = v1.add(thick) # thickness power plate 
+	l2=Part.LineSegment(v1,v2 )
+	l2s=l2.toShape();
+	Part.show(l2s)
+	
+	
+	dirnorm= dir.normalize()
+	
+	if protect == 1:
+		offset= 2.*(e -flange )
 		
-		arc1s = arc1.toShape()
-	
-		v0=arc1.EndPoint
-		 	
-		v1 = Base.Vector(v0.x - deltax , v0.y,0.  )
-		v2 = Base.Vector(v1.x , v1.y - thick_plate ,0.  )
-		v3 = arc2.EndPoint
-	
-		plate_right_upper = v2
-		plate_right_lower = v1
-	
-	
-		v9=arc1.StartPoint
-		v8=Base.Vector(v9.x + deltax , v9.y,0.  )	
-		v7 = Base.Vector(v8.x , v8.y - thick_plate ,0.  )
-		v6 = arc2.StartPoint
-		
-	
-		plate_left_upper = v7
-		plate_left_lower = v8
-	
-		#v8 = Base.Vector(v9.x +deltax, v9.y,0.  )
-		#v7 = Base.Vector(v8.x, v8.y -thick_plate ,0.  )
-		
-		l1=Part.LineSegment(v0,v1 )
-		l1s=l1.toShape();
-	
-		l2=Part.LineSegment(v1,v2 )
-		l2s=l2.toShape();
+		front =  dirnorm.multiply(length-offset ) 
+		v3 = v2.add ( front )
 		
 		l3=Part.LineSegment(v2,v3 )
 		l3s=l3.toShape();
-	
-		l9=Part.LineSegment(v9,v8 )
-		l9s=l9.toShape();
-	
-		l8=Part.LineSegment(v8,v7 )
-		l8s=l8.toShape();
-	
-		l7=Part.LineSegment(v7,v6 )
+		Part.show(l3s)
+		
+		v4 = v3.add( - thick )
+		
+		l4=Part.LineSegment(v3,v4 )
+		l4s=l4.toShape();
+		Part.show(l4s)
+		
+		dirnorm= dir.normalize()
+		back = dirnorm.multiply(- flange)
+		
+		v5 = v4.add(back )  
+		
+		l5=Part.LineSegment(v4,v5 )
+		l5s=l5.toShape();
+		Part.show(l5s)
+		
+	if protect == 2:
+		offset= 2.*(e -flange )
+		
+		front =  dirnorm.multiply(length-offset ) 
+		
+		v3 = v2.add ( front )
+		
+		l3=Part.LineSegment(v2,v3 )
+		l3s=l3.toShape();
+		#Part.show(l3s)
+		
+		## the short segment is added to v3 
+		f1 = 4. * tan( epsilon /180 * math.pi )
+		offset= (flange-f1  )
+		
+		dirnorm= dir.normalize()
+		v7_f1 =  dirnorm.multiply( -offset ) 
+		v7 = v3.add ( v7_f1 )
+
+		l7=Part.LineSegment(v3,v7 )
 		l7s=l7.toShape();
-	
-	
-	
-		W1 = Part.Wire([l9s, l8s,l7s,arc1s, l1s, l2s,l3s, arc2s ] )
-		#W2 = Part.Wire([l9s, l8s,l7s ] )
-	
-	
-		#Part.show( W2)
-	
-	
-	
-		hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
-		pocket= Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),pocket_radius)
+		Part.show(l7s)			
 		
 		
 		
-		hole_wire1 = Part.Wire([ hole.toShape() ] )
-		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20. )
-		hole_wire2 = Part.Wire([ hole.toShape() ] )
-		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160. )
-		hole_wire3 = Part.Wire([ hole.toShape() ] )
-		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
+		v4 = v3.add( - thick )
+		
+		l4=Part.LineSegment(v3,v4 )
+		l4s=l4.toShape();
+		Part.show(l4s)
+		
+		dirnorm= dir.normalize()
+		back = dirnorm.multiply( flange)
+		
+		v5 = v4.add(back )  
+		
+		l5=Part.LineSegment(v4,v5 )
+		l5s=l5.toShape();
+		Part.show(l5s)
 			
-		#Part.show( inner_circle.toShape() )
-		#Part.show( outer_circle.toShape() )
+		
+	if protect == 0:
+		f1 = 4. * tan( epsilon /180 * math.pi )
+		offset= (flange-f1  )
+		
+		v7_f1 =  dirnorm.multiply( offset ) 
+		v7 = v2.add ( v7_f1 )
+		l7=Part.LineSegment(v2,v7 )
+		l7s=l7.toShape();
+		Part.show(l7s)	
+		v8 = arc1.StartPoint	
+		l8=Part.LineSegment(v7,v8 )
+		l8s=l8.toShape();
+		Part.show(l8s)	
+		
 		
 	
-		if ( show == 1 ):
-			Part.show( W1)
+	#v3=arc1.StartPoint
+	
+	#l3=Part.LineSegment(v2,v3 )
+	#l3s=l3.toShape();
+	#Part.show(l3s)
+	############################
+	# left half
+	############################
+	
+	v10=arc2.EndPoint
+	v11 = Base.Vector(-anchor_x,0.,0)		
+	#l10=Part.LineSegment(v10,v11 )
+	#l10s=l10.toShape();
+	#Part.show(l10s)
+	
+	dir = v10 - v11
+	dirnorm= dir.normalize() # points downwards
+	inwards = dirnorm.normalize().multiply(flange) 
+	v11 = v10.add( -inwards ) 
+	l11=Part.LineSegment(v10,v11 )
+	l11s=l11.toShape();
+	Part.show(l11s)
+	
+	
+	
+	dir = v10 - v11
+	dirnorm= dir.normalize() # points downwards
+
+	ortho_dir = Base.Vector(-dir.y,dir.x,0).normalize() # points to the right up
+	thick =ortho_dir.normalize().multiply(-4.) 	
+	v12 = v11.add(thick) # thickness power plate 	
+	l12=Part.LineSegment(v11,v12 )
+	l12s=l12.toShape();
+	Part.show(l12s)
+	front =  dirnorm.multiply(length-offset ) 
+	
+	if protect == 1:
+		
+		v13 = v12.add ( front )
+		
+		l13=Part.LineSegment(v12,v13 )
+		l13s=l13.toShape();
+		Part.show(l13s)
+		v14 = v13.add( - thick )
+		
+		l14=Part.LineSegment(v13,v14 )
+		l14s=l14.toShape();
+		Part.show(l14s)
+		
+		dirnorm= dir.normalize()
+		back = dirnorm.multiply(-flange)
+		
+		v15 = v14.add(back )  
+		
+		l15=Part.LineSegment(v14,v15 )
+		l15s=l15.toShape();
+		Part.show(l15s)
+		
+	if protect == 2:
+		dir = v10 - v11
+		dirnorm= dir.normalize()
+		
+		
+		#print("in protect")
+		offset= 2.*(e -flange )
+		
+		front =  dirnorm.multiply(length-offset ) 
+		
+		v13 = v12.add ( front )
+		
+		l13=Part.LineSegment(v12,v13 )
+		l13s=l13.toShape();
+		#Part.show(l13s)
+		
+		## the short segment is added to v3 
+		f1 = 4. * tan( epsilon /180 * math.pi )
+		offset= (flange-f1  )
+		
+		dirnorm= dir.normalize()
+		v7_f1 =  dirnorm.multiply( -offset ) 
+		v17 = v13.add ( v7_f1 )
+
+		l17=Part.LineSegment(v13,v17 )
+		l17s=l17.toShape();
+		Part.show(l17s)			
+		
+		
+		
+		v14 = v13.add( - thick )
+		
+		l14=Part.LineSegment(v13,v14 )
+		l14s=l14.toShape();
+		Part.show(l14s)
+		
+		dirnorm= dir.normalize()
+		back = dirnorm.multiply( flange)
+		
+		v15 = v14.add(back )  
+		
+		l15=Part.LineSegment(v14,v15 )
+		l15s=l15.toShape();
+		Part.show(l15s)
+				
+		
+		
+	if protect == 0:
+		f1 = 4. * tan( epsilon /180 * math.pi )
+		offset= (flange-f1  )
+		
+		dirnorm= dir.normalize()
+	
+		v17_f1 =  dirnorm.multiply( offset ) 
+		v17 = v12.add ( v17_f1 )
+		l17=Part.LineSegment(v12,v17 )
+		l17s=l17.toShape();
+		Part.show(l17s)	
+		v18 = arc1.EndPoint	
+		l18=Part.LineSegment(v17,v18 )
+		l18s=l18.toShape();
+		Part.show(l18s)	
+		
+		
+	
+	
+	
+	if protect == 1 or protect == 2 :
+		#e = (length -2.*flange) /2.
+		v = inner_radius - ( e  )
+		
+		vArc = Base.Vector(0.,-v ,0)	
+		
+		arc = Part.Arc(v5,  vArc,v15,)
+		Part.show(arc.toShape())	
+		
+		#v13=arc1.EndPoint
+		
+		#l13=Part.LineSegment(v12,v13 )
+		#l13s=l13.toShape();
+		#Part.show(l13s)
+	
+	if protect == 2:
+		#connect the lines from the outer circle to the innerarc 
+		v18 = arc_out_join.StartPoint
+		l18=Part.LineSegment(v17,v18 )
+		l18s=l18.toShape();
+		Part.show(l18s)
+				
+		v8 = arc_out_join.EndPoint
+		l8=Part.LineSegment(v7,v8 )
+		l8s=l8.toShape();
+		Part.show(l8s)
 			
-			#Part.show( arc2.toShape() )
+		
 			
-			Part.show( hole_wire1)
-			Part.show( hole_wire2)
-			Part.show( hole_wire3)
+				
+						
+	################			
+	#holes
+	################
+	hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
+	#pocket= Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),pocket_radius)
+		
+	
+		
+	hole_wire1 = Part.Wire([ hole.toShape() ] )
+	hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20. )
+	hole_wire2 = Part.Wire([ hole.toShape() ] )
+	hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160. )
+	hole_wire3 = Part.Wire([ hole.toShape() ] )
+	hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
+
+	hole_wire4 = Part.Wire([ hole.toShape() ] )
+	hole_wire4.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
+	hole_wire4.translate(Base.Vector(0.,12. ,0.))
 			
+					
+	Part.show( hole_wire1)
+	Part.show( hole_wire2)
+	Part.show( hole_wire3)	
+	Part.show( hole_wire4)	
+	
 
 
 
 
-
-
-
-a = 11
+a = 12
 
 
 if a ==1 :
@@ -1413,7 +1702,11 @@ if a == 10:
 	amp_plate()
 
 
-if a == 11: 
+if a == 11: #not in use
 	two_speakers_disk()
+
+
+if a == 12: 
+	two_speakers_disk_protect(2)
 
 
