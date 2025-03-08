@@ -1289,7 +1289,7 @@ def two_speakers_disk_protect(protect):
 	ts_alpha = 180 / math.pi * math.atan( inner_radius / (inner_radius+ d_half ) )
 
 
-	#ts_alpha = 45  # change this 
+	ts_alpha = ts_alpha +2  # change this 
 	ts_beta = calc_ts_beta(ts_alpha, d_half)
 	#ts_beta = 30.
 	
@@ -1316,8 +1316,10 @@ def two_speakers_disk_protect(protect):
 	inner_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),inner_radius)
 	arc2 = Part.Arc(inner_circle, ( -ts_beta ) /180. *pi,(ts_beta+180. )/180. *pi  )
 	
+	
 	arc2s=arc2.toShape()
-	Part.show(arc2.toShape())
+	if protect == 1 or protect == 0:
+		Part.show(arc2.toShape())
 	
 	
 
@@ -1366,7 +1368,9 @@ def two_speakers_disk_protect(protect):
 	v1 = v0.add( -inwards ) 
 	l1=Part.LineSegment(v0,v1 )
 	l1s=l1.toShape();
-	Part.show(l1s)
+	
+	if protect == 1 or protect == 0:
+		Part.show(l1s)
 	
 	dir = v0 - v1
 	dirnorm= dir.normalize() 
@@ -1375,7 +1379,8 @@ def two_speakers_disk_protect(protect):
 	v2 = v1.add(thick) # thickness power plate 
 	l2=Part.LineSegment(v1,v2 )
 	l2s=l2.toShape();
-	Part.show(l2s)
+	if protect == 1 or protect == 0:
+		Part.show(l2s)
 	
 	
 	dirnorm= dir.normalize()
@@ -1404,6 +1409,9 @@ def two_speakers_disk_protect(protect):
 		l5=Part.LineSegment(v4,v5 )
 		l5s=l5.toShape();
 		Part.show(l5s)
+		
+		
+		
 		
 	if protect == 2:
 		offset= 2.*(e -flange )
@@ -1483,7 +1491,8 @@ def two_speakers_disk_protect(protect):
 	v11 = v10.add( -inwards ) 
 	l11=Part.LineSegment(v10,v11 )
 	l11s=l11.toShape();
-	Part.show(l11s)
+	if protect == 1 or protect == 0:
+		Part.show(l11s)
 	
 	
 	
@@ -1495,7 +1504,10 @@ def two_speakers_disk_protect(protect):
 	v12 = v11.add(thick) # thickness power plate 	
 	l12=Part.LineSegment(v11,v12 )
 	l12s=l12.toShape();
-	Part.show(l12s)
+	if protect == 1 or protect == 0:
+		Part.show(l12s)
+		
+		
 	front =  dirnorm.multiply(length-offset ) 
 	
 	if protect == 1:
@@ -1637,17 +1649,18 @@ def two_speakers_disk_protect(protect):
 	hole_wire4.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
 	hole_wire4.translate(Base.Vector(0.,12. ,0.))
 			
-					
-	Part.show( hole_wire1)
-	Part.show( hole_wire2)
-	Part.show( hole_wire3)	
-	Part.show( hole_wire4)	
-	
+	if protect != 2 :				
+		Part.show( hole_wire1)
+		Part.show( hole_wire2)
+	if protect != 0 :				
+		Part.show( hole_wire3)	
+		Part.show( hole_wire4)	
+		
 
 
 
 
-a = 12
+a = 14
 
 
 if a ==1 :
@@ -1706,7 +1719,12 @@ if a == 11: #not in use
 	two_speakers_disk()
 
 
-if a == 12: 
+if a == 12: # the part joining the loadspeaker plates together 
 	two_speakers_disk_protect(2)
 
+if a == 13: 
+	two_speakers_disk_protect(1)
+	
+if a == 14: 
+	two_speakers_disk_protect(0)
 
