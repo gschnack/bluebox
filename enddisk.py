@@ -1318,16 +1318,16 @@ def two_speakers_disk_protect(protect):
 	
 	
 	arc2s=arc2.toShape()
-	if protect == 1 or protect == 0:
-		Part.show(arc2.toShape())
+	#if protect == 1:                #or protect == 0:
+	#	Part.show(arc2.toShape())
 	
 	
 
 	outer_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius)
 	
-	if protect == 1 :
+	#if protect == 1 :
 	# insert this for a protecting disk 
-		Part.show(outer_circle.toShape())
+	#	Part.show(outer_circle.toShape())
 	
 
 	#arc1 = Part.Arc(outer_circle, 150/180. *pi,30/180. *pi  )
@@ -1336,13 +1336,13 @@ def two_speakers_disk_protect(protect):
 	
 	
 	
-	if protect == 0: 
-		Part.show(arc1.toShape())
+	#if protect == 0: 
+	#	Part.show(arc1.toShape())
 	
 	
 	if protect == 2: 
 		arc_out_join = Part.Arc(outer_circle, (-ts_beta-90) /180. *pi, (ts_beta  -90. )/180. *pi  )
-		Part.show(arc_out_join.toShape())
+		#Part.show(arc_out_join.toShape())
 	
 	
 	
@@ -1369,8 +1369,8 @@ def two_speakers_disk_protect(protect):
 	l1=Part.LineSegment(v0,v1 )
 	l1s=l1.toShape();
 	
-	if protect == 1 or protect == 0:
-		Part.show(l1s)
+	#if protect == 1: # or protect == 0:
+	#	Part.show(l1s)
 	
 	dir = v0 - v1
 	dirnorm= dir.normalize() 
@@ -1379,8 +1379,8 @@ def two_speakers_disk_protect(protect):
 	v2 = v1.add(thick) # thickness power plate 
 	l2=Part.LineSegment(v1,v2 )
 	l2s=l2.toShape();
-	if protect == 1 or protect == 0:
-		Part.show(l2s)
+	#if protect == 1: # or protect == 0:
+	#	Part.show(l2s)
 	
 	
 	dirnorm= dir.normalize()
@@ -1393,13 +1393,13 @@ def two_speakers_disk_protect(protect):
 		
 		l3=Part.LineSegment(v2,v3 )
 		l3s=l3.toShape();
-		Part.show(l3s)
+		#Part.show(l3s)
 		
 		v4 = v3.add( - thick )
 		
 		l4=Part.LineSegment(v3,v4 )
 		l4s=l4.toShape();
-		Part.show(l4s)
+		#Part.show(l4s)
 		
 		dirnorm= dir.normalize()
 		back = dirnorm.multiply(- flange)
@@ -1408,7 +1408,7 @@ def two_speakers_disk_protect(protect):
 		
 		l5=Part.LineSegment(v4,v5 )
 		l5s=l5.toShape();
-		Part.show(l5s)
+		#Part.show(l5s)
 		
 		
 		
@@ -1434,7 +1434,7 @@ def two_speakers_disk_protect(protect):
 
 		l7=Part.LineSegment(v3,v7 )
 		l7s=l7.toShape();
-		Part.show(l7s)			
+		#Part.show(l7s)			
 		
 		
 		
@@ -1442,7 +1442,7 @@ def two_speakers_disk_protect(protect):
 		
 		l4=Part.LineSegment(v3,v4 )
 		l4s=l4.toShape();
-		Part.show(l4s)
+		#Part.show(l4s)
 		
 		dirnorm= dir.normalize()
 		back = dirnorm.multiply( flange)
@@ -1451,7 +1451,7 @@ def two_speakers_disk_protect(protect):
 		
 		l5=Part.LineSegment(v4,v5 )
 		l5s=l5.toShape();
-		Part.show(l5s)
+		#Part.show(l5s)
 			
 		
 	if protect == 0:
@@ -1462,11 +1462,11 @@ def two_speakers_disk_protect(protect):
 		v7 = v2.add ( v7_f1 )
 		l7=Part.LineSegment(v2,v7 )
 		l7s=l7.toShape();
-		Part.show(l7s)	
+		#Part.show(l7s)	
 		v8 = arc1.StartPoint	
 		l8=Part.LineSegment(v7,v8 )
 		l8s=l8.toShape();
-		Part.show(l8s)	
+		#Part.show(l8s)	
 		
 		
 	
@@ -1491,8 +1491,8 @@ def two_speakers_disk_protect(protect):
 	v11 = v10.add( -inwards ) 
 	l11=Part.LineSegment(v10,v11 )
 	l11s=l11.toShape();
-	if protect == 1 or protect == 0:
-		Part.show(l11s)
+	#if protect == 1: # or protect == 0:
+	#	Part.show(l11s)
 	
 	
 	
@@ -1504,8 +1504,8 @@ def two_speakers_disk_protect(protect):
 	v12 = v11.add(thick) # thickness power plate 	
 	l12=Part.LineSegment(v11,v12 )
 	l12s=l12.toShape();
-	if protect == 1 or protect == 0:
-		Part.show(l12s)
+	#if protect == 1: # or protect == 0:
+	#	Part.show(l12s)
 		
 		
 	front =  dirnorm.multiply(length-offset ) 
@@ -1516,12 +1516,12 @@ def two_speakers_disk_protect(protect):
 		
 		l13=Part.LineSegment(v12,v13 )
 		l13s=l13.toShape();
-		Part.show(l13s)
+		#Part.show(l13s)
 		v14 = v13.add( - thick )
 		
 		l14=Part.LineSegment(v13,v14 )
 		l14s=l14.toShape();
-		Part.show(l14s)
+		#Part.show(l14s)
 		
 		dirnorm= dir.normalize()
 		back = dirnorm.multiply(-flange)
@@ -1530,7 +1530,7 @@ def two_speakers_disk_protect(protect):
 		
 		l15=Part.LineSegment(v14,v15 )
 		l15s=l15.toShape();
-		Part.show(l15s)
+		#Part.show(l15s)
 		
 	if protect == 2:
 		dir = v10 - v11
@@ -1558,7 +1558,7 @@ def two_speakers_disk_protect(protect):
 
 		l17=Part.LineSegment(v13,v17 )
 		l17s=l17.toShape();
-		Part.show(l17s)			
+		#Part.show(l17s)			
 		
 		
 		
@@ -1566,7 +1566,7 @@ def two_speakers_disk_protect(protect):
 		
 		l14=Part.LineSegment(v13,v14 )
 		l14s=l14.toShape();
-		Part.show(l14s)
+		#Part.show(l14s)
 		
 		dirnorm= dir.normalize()
 		back = dirnorm.multiply( flange)
@@ -1575,7 +1575,7 @@ def two_speakers_disk_protect(protect):
 		
 		l15=Part.LineSegment(v14,v15 )
 		l15s=l15.toShape();
-		Part.show(l15s)
+		#Part.show(l15s)
 				
 		
 		
@@ -1589,11 +1589,11 @@ def two_speakers_disk_protect(protect):
 		v17 = v12.add ( v17_f1 )
 		l17=Part.LineSegment(v12,v17 )
 		l17s=l17.toShape();
-		Part.show(l17s)	
+		#Part.show(l17s)	
 		v18 = arc1.EndPoint	
 		l18=Part.LineSegment(v17,v18 )
 		l18s=l18.toShape();
-		Part.show(l18s)	
+		#Part.show(l18s)	
 		
 		
 	
@@ -1606,7 +1606,8 @@ def two_speakers_disk_protect(protect):
 		vArc = Base.Vector(0.,-v ,0)	
 		
 		arc = Part.Arc(v5,  vArc,v15,)
-		Part.show(arc.toShape())	
+		#if protect == 2:
+		#	Part.show(arc.toShape())	
 		
 		#v13=arc1.EndPoint
 		
@@ -1619,16 +1620,32 @@ def two_speakers_disk_protect(protect):
 		v18 = arc_out_join.StartPoint
 		l18=Part.LineSegment(v17,v18 )
 		l18s=l18.toShape();
-		Part.show(l18s)
+		#Part.show(l18s)
 				
 		v8 = arc_out_join.EndPoint
 		l8=Part.LineSegment(v7,v8 )
 		l8s=l8.toShape();
-		Part.show(l8s)
+		#Part.show(l8s)
 			
 		
+	if protect == 0:	
+		outer_arcs =arc1.toShape()
+		Wu = Part.Wire([l11s,l12s,l17s,l18s,outer_arcs,l8s,l7s,l2s,l1s, arc2s ])
+		Part.show( Wu)
+		
+	if protect == 1:	
+		outer_arcs =arc1.toShape()
+		Wu = Part.Wire([l11s,l12s,l13s,l14s,l15s,arc.toShape(),l5s,l4s,l3s,l2s,l1s,arc2s ])
+		#l17s,l18s,outer_arcs,l8s,l7s,l2s,l1s, arc2s ])
+		Part.show( Wu)
+		Part.show(outer_circle.toShape())
 			
-				
+	if protect == 2:	
+		#Wu = Part.Wire([l14s,l15s, l17s ])
+		#Part.show( Wu)
+		Wu = Part.Wire([l18s,l17s,l14s,l15s,arc.toShape(),l5s,l4s,l7s,l8s,arc_out_join.toShape() ])
+		Part.show( Wu)
+		#  l8s,,l18s,,arc_out_join.toShape() 
 						
 	################			
 	#holes
@@ -1636,7 +1653,12 @@ def two_speakers_disk_protect(protect):
 	hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
 	#pocket= Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),pocket_radius)
 		
+	hole_aux1= Part.Circle(Base.Vector(centerx+ 25,centery,0),Base.Vector(0,0,1),hole_radius)
+	hole_aux2= Part.Circle(Base.Vector(centerx- 25,centery,0),Base.Vector(0,0,1),hole_radius)
 	
+	
+	
+	#pocket 	
 		
 	hole_wire1 = Part.Wire([ hole.toShape() ] )
 	hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20. )
@@ -1648,7 +1670,11 @@ def two_speakers_disk_protect(protect):
 	hole_wire4 = Part.Wire([ hole.toShape() ] )
 	hole_wire4.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
 	hole_wire4.translate(Base.Vector(0.,12. ,0.))
-			
+	
+	if protect == 1 :				
+		Part.show( hole_aux1.toShape())		
+		Part.show( hole_aux2.toShape())			
+									
 	if protect != 2 :				
 		Part.show( hole_wire1)
 		Part.show( hole_wire2)
@@ -1660,7 +1686,7 @@ def two_speakers_disk_protect(protect):
 
 
 
-a = 14
+a = 12
 
 
 if a ==1 :
