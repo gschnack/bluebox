@@ -1683,10 +1683,35 @@ def two_speakers_disk_protect(protect):
 		Part.show( hole_wire4)	
 		
 
+def two_speakers_plate(centerx, centery, width,height):
+
+	centerx =0
+	centery =0
+	speaker_diameter = 36.2
+	distance_holes = 41. /(sqrt(2)) 
+
+	W =rect( 0. ,0., 48.8 , 48.8 )	
+	Part.show(W)
+		
+	hole = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),speaker_diameter/2.)
+		
+	Part.show(hole.toShape())
+	
+	hole_rect( 0. ,0., distance_holes , distance_holes,1.6 )
+
+	fix1 = Part.Circle(Base.Vector(centerx+8,centery,0),Base.Vector(0,0,1),1.6)
+	fix2 = Part.Circle(Base.Vector(centerx-8,centery,0),Base.Vector(0,0,1),1.6)
+	fix3 = Part.Circle(Base.Vector(centerx-0,centery,0),Base.Vector(0,0,1),1.6)
+	
+	Part.show(fix1.toShape())
+	Part.show(fix2.toShape())
+	#Part.show(fix3.toShape())
 
 
 
-a = 12
+
+
+a = 15
 
 
 if a ==1 :
@@ -1753,4 +1778,8 @@ if a == 13:
 	
 if a == 14: 
 	two_speakers_disk_protect(0)
+
+
+if a == 15:
+	two_speakers_plate(0, 0, 0,0)
 
