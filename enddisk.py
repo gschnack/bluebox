@@ -1711,11 +1711,714 @@ def two_speakers_plate(centerx, centery, width,height):
 
 
 
-a = 15
+start = 0.
+
+
+def calcxy( s ):
+	y = s/72. * 36.
+	if (1 -(y/40.)**2 ) >=0 :
+		x = 55. * math.sqrt(1 -(y/40.)**2 )
+	else:
+		x =0
+	
+	return x,y
+
+
+
+
+def dome1(show):
+	
+	steps = 18	
+				
+	#v0 = Base.Vector(55. ,0.,0)
+
+	#v10 = Base.Vector(55 ,0. ,0)
+	v10 = Base.Vector(0 ,55. ,0)
+
+	for s in range(1 ,steps +1 ):
+		#x = s/100. *55. 
+		#y = 36 * math.sqrt(1 -(x/55.)**2 )  
+		#y = s/72. * 36
+		#x = 55. * math.sqrt(1 -(y/36.)**2 )
+		x,y = calcxy( s )
+		
+		
+		#v1= Base.Vector(x,y,0)
+		v11= Base.Vector(0,x,y)
+		
+		circ = Part.Circle(Base.Vector(0,0, y),Base.Vector(0,0,1),x )
+		if( show):
+			aWire=Part.Wire([circ.toShape()])
+			
+			s1 =  int(18-s)
+			#print("s1",s1,"s",s )
+			#Part.show(circ.toShape())
+			#p1=App.ActiveDocument.addObject("Part::Feature",'outer{:02d}'.format( s1))
+			p1=App.ActiveDocument.addObject("Part::Feature",'outer{:0.2f}'.format( (s1+1)/2))
+			
+			p1.Shape = aWire
+			p1.ViewObject.LineColor = (1.00,1.00,0.00)
+			
+			
+		#print("y", y,"delta x", x,"s",s)	
+	
+
+	#Part.show(inner_circle.toShape() )
+	
+	circ = Part.Circle(Base.Vector(0,0, 9.0 ),Base.Vector(0,0,1),30. )
+	if( show):
+		aWire=Part.Wire([circ.toShape()])
+		
+		hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
+		
+		hole_wire1 = Part.Wire([ hole.toShape() ] )
+		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20. )
+		hole_wire2 = Part.Wire([ hole.toShape() ] )
+		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160. )
+		hole_wire3 = Part.Wire([ hole.toShape() ] )
+		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )	
+		
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_01')
+		p1.Shape = hole_wire1
+		p2=App.ActiveDocument.addObject("Part::Feature",'hole_02')
+		p2.Shape = hole_wire2
+		p3=App.ActiveDocument.addObject("Part::Feature",'hole_03')
+		p3.Shape = hole_wire3
+				
+		inner_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),inner_radius)
+		
+		
+		
+		
+		
+		#s1 =  int(72-s)
+		#print("s1",s1,"s",s )
+		#Part.show(circ.toShape())
+		p1=App.ActiveDocument.addObject("Part::Feature",'inner_cut')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)		
+		
+	
+		hole = Part.Circle(Base.Vector(35.,centery,0),Base.Vector(0,0,1),hole_radius)
+			
+		hole_wire1 = Part.Wire([ hole.toShape() ] )
+		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 0. +30+180)
+		hole_wire2 = Part.Wire([ hole.toShape() ] )
+		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 120.+30+180 )
+		hole_wire3 = Part.Wire([ hole.toShape() ] )
+		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -120. +30+180)	
+		
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_04')
+		p1.Shape = hole_wire1
+		p2=App.ActiveDocument.addObject("Part::Feature",'hole_05')
+		p2.Shape = hole_wire2
+		p3=App.ActiveDocument.addObject("Part::Feature",'hole_06')
+		p3.Shape = hole_wire3				
+										
+		hole1 = Part.Circle(Base.Vector(6,0, 9.0 ),Base.Vector(0,0,1),2.1 )
+		aWire=Part.Wire([hole1.toShape()])
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_01')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+
+		hole2 = Part.Circle(Base.Vector( -6,0, 9.0 ),Base.Vector(0,0,1),2.1 )
+		aWire=Part.Wire([hole2.toShape()])
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_02')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)				
+																	
+							
+	return x,y  
+
+
+def dome2(x, y,show):
+	
+	steps = 18		
+	#v0 = Base.Vector(55. ,0.,0)
+
+	#v10 = Base.Vector(55 ,0. ,0)
+	v10 = Base.Vector(0 ,x ,y)
+
+	for s in range(1 +(steps) ,int(steps*2)+1 ):
+		#x = s/100. *55. 
+		#y = 36 * math.sqrt(1 -(x/55.)**2 )  
+		#y = s/72 * 36 
+		#x = 55. * math.sqrt(1 -(y/36.)**2 )
+		x,y = calcxy( s )
+	
+		#v1= Base.Vector(x,y,0)
+		v11= Base.Vector(0,x,y)
+		
+		circ = Part.Circle(Base.Vector(120,0, y-9),Base.Vector(0,0,1),x )
+		#circ = Part.Circle(Base.Vector(0,0, y),Base.Vector(0,0,1),x )
+		
+		if( show):
+			aWire=Part.Wire([circ.toShape()])
+			
+			s1 =  int(36-s)
+			print("dome 2 s1",s1,"s",s )
+			#Part.show(circ.toShape())
+			#p1=App.ActiveDocument.addObject("Part::Feature",'outer{:02d}'.format( s1))
+			p1=App.ActiveDocument.addObject("Part::Feature",'outer{:0.2f}'.format( (s1+1)/2))
+			
+			p1.Shape = aWire
+			p1.ViewObject.LineColor = (1.00,1.00,0.00)
+			
+		#print("y", y,"delta x", x)	
+	circ = Part.Circle(Base.Vector(120,0, 9.0 ),Base.Vector(0,0,1),30. )
+	if( show):
+		aWire=Part.Wire([circ.toShape()])
+		
+		#s1 =  int(72-s)
+		#print("s1",s1,"s",s )
+		#Part.show(circ.toShape())
+		p1=App.ActiveDocument.addObject("Part::Feature",'inner_cut')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)
+	if( show):
+		aWire=Part.Wire([circ.toShape()])
+		
+		#s1 =  int(72-s)
+		#print("s1",s1,"s",s )
+		#Part.show(circ.toShape())
+		#p1=App.ActiveDocument.addObject("Part::Feature",'inner_cut')
+		#p1.Shape = aWire
+		#p1.ViewObject.LineColor = (1.00,0.00,0.00)		
+		
+	
+		hole = Part.Circle(Base.Vector(35.,centery,0),Base.Vector(0,0,1),hole_radius)
+			
+		hole_wire1 = Part.Wire([ hole.toShape() ] )
+		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 0. +30+180)
+		hole_wire1.translate(Base.Vector(120.,0.,0.))
+		
+		
+		hole_wire2 = Part.Wire([ hole.toShape() ] )
+		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 120.+30+180 )
+		hole_wire2.translate(Base.Vector(120.,0.,0.))
+		hole_wire3 = Part.Wire([ hole.toShape() ] )
+		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -120. +30+180)	
+		hole_wire3.translate(Base.Vector(120.,0.,0.))
+		
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_04')
+		p1.Shape = hole_wire1
+		p2=App.ActiveDocument.addObject("Part::Feature",'hole_05')
+		p2.Shape = hole_wire2
+		p3=App.ActiveDocument.addObject("Part::Feature",'hole_06')
+		p3.Shape = hole_wire3	
+			
+				
+		hole1 = Part.Circle(Base.Vector(6+120,0, 9.0 ),Base.Vector(0,0,1),2.1 )
+		aWire=Part.Wire([hole1.toShape()])
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_01')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+
+		hole2 = Part.Circle(Base.Vector(120 -6,0, 9.0 ),Base.Vector(0,0,1),2.1 )
+		aWire=Part.Wire([hole2.toShape()])
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_02')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)				
+							
+	return x,y  
+
+
+
+def dome3(x, y,show):
+	
+	steps = 18		
+	#v0 = Base.Vector(55. ,0.,0)
+
+	#v10 = Base.Vector(55 ,0. ,0)
+	v10 = Base.Vector(0 ,x ,y)
+
+	for s in range(1 +(steps*2) ,int(steps*3)+1 ):
+		#x = s/100. *55. 
+		#y = 36 * math.sqrt(1 -(x/55.)**2 )  
+		#y = s/72 * 36 
+		#x = 55. * math.sqrt(1 -(y/36.)**2 )
+		x,y = calcxy( s )
+	
+		#v1= Base.Vector(x,y,0)
+		v11= Base.Vector(0,x,y)
+		
+		circ = Part.Circle(Base.Vector(240,0, y-18),Base.Vector(0,0,1),x )
+		#circ = Part.Circle(Base.Vector(0,0, y),Base.Vector(0,0,1),x )
+		
+		if( show):
+			aWire=Part.Wire([circ.toShape()])
+			
+			s1 =  int(54-s)
+			print("s1",s1,"s",s )
+			#Part.show(circ.toShape())
+			p1=App.ActiveDocument.addObject("Part::Feature",'outer{:0.2f}'.format( (s1+1)/2))
+			p1.Shape = aWire
+			p1.ViewObject.LineColor = (1.00,1.00,0.00)
+			
+			
+			
+		#print("y", y,"delta x", x)	
+	circ = Part.Circle(Base.Vector(240,0, 9.0 ),Base.Vector(0,0,1),21. )
+	circpoti = Part.Circle(Base.Vector(240,0, 9.0 ),Base.Vector(0,0,1),5. )
+	if( show):
+		aWire=Part.Wire([circ.toShape()])
+		
+		#s1 =  int(72-s)
+		#print("s1",s1,"s",s )
+		#Part.show(circ.toShape())
+		p1=App.ActiveDocument.addObject("Part::Feature",'inner_pocket')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+		
+		aWire=Part.Wire([circpoti.toShape()])
+		p1=App.ActiveDocument.addObject("Part::Feature",'inner_cut')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)
+		
+	
+	#circ = Part.Circle(Base.Vector(240,0, 9.0 ),Base.Vector(0,0,1),30. )
+	#if( show):
+	#	aWire=Part.Wire([circ.toShape()])
+		
+		#s1 =  int(72-s)
+		#print("s1",s1,"s",s )
+		#Part.show(circ.toShape())
+		#p1=App.ActiveDocument.addObject("Part::Feature",'inner_cut')
+		#p1.Shape = aWire
+		#p1.ViewObject.LineColor = (1.00,0.00,0.00)		
+		
+		
+		#aWire=Part.Wire([circ.toShape()])
+		
+		#s1 =  int(72-s)
+		#print("s1",s1,"s",s )
+		#Part.show(circ.toShape())
+		#p1=App.ActiveDocument.addObject("Part::Feature",'inner_cut')
+		#p1.Shape = aWire
+		#p1.ViewObject.LineColor = (1.00,0.00,0.00)		
+		
+	
+		hole = Part.Circle(Base.Vector(35.,centery,0),Base.Vector(0,0,1),hole_radius)
+			
+		hole_wire1 = Part.Wire([ hole.toShape() ] )
+		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 0. +30+180)
+		hole_wire1.translate(Base.Vector(240.,0.,0.))
+		
+		
+		hole_wire2 = Part.Wire([ hole.toShape() ] )
+		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 120.+30+180 )
+		hole_wire2.translate(Base.Vector(240.,0.,0.))
+		hole_wire3 = Part.Wire([ hole.toShape() ] )
+		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -120. +30+180)	
+		hole_wire3.translate(Base.Vector(240.,0.,0.))
+		
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_04')
+		p1.Shape = hole_wire1
+		p2=App.ActiveDocument.addObject("Part::Feature",'hole_05')
+		p2.Shape = hole_wire2
+		p3=App.ActiveDocument.addObject("Part::Feature",'hole_06')
+		p3.Shape = hole_wire3	
+			
+					
+	return x,y  
+
+
+def dome4(x, y,show):
+	
+	steps = 18		
+	#v0 = Base.Vector(55. ,0.,0)
+
+	#v10 = Base.Vector(55 ,0. ,0)
+	v10 = Base.Vector(0 ,x ,y)
+
+	for s in range(1 +(steps*3) ,int(steps*4)+1 ):
+		#x = s/100. *55. 
+		#y = 36 * math.sqrt(1 -(x/55.)**2 )  
+		#y = s/72 * 36 
+		#x = 55. * math.sqrt(1 -(y/36.)**2 )
+		x,y = calcxy( s )
+	
+		#v1= Base.Vector(x,y,0)
+		v11= Base.Vector(0,x,y)
+		
+		circ = Part.Circle(Base.Vector(360,0, y-27. ),Base.Vector(0,0,1),x )
+		#circ = Part.Circle(Base.Vector(0,0, y ),Base.Vector(0,0,1),x )
+		
+		if( show):
+			aWire=Part.Wire([circ.toShape()])
+			
+			s1 =  int(72-s)
+			print("s1",s1,"s",s )
+			#Part.show(circ.toShape())
+			p1=App.ActiveDocument.addObject("Part::Feature",'outer{:0.2f}'.format( (s1+1)/2))
+			p1.Shape = aWire
+			p1.ViewObject.LineColor = (1.00,0.00,1.00)
+			
+		#print("y", y,"delta x", x)	
+
+
+	# cut through 42 diameter
+	circ = Part.Circle(Base.Vector(360,0, 9.0 ),Base.Vector(0,0,1),21. )
+	if( show):
+		aWire=Part.Wire([circ.toShape()])
+		
+		s1 =  int(72-s)
+		print("s1",s1,"s",s )
+		#Part.show(circ.toShape())
+		p1=App.ActiveDocument.addObject("Part::Feature",'inner')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+
+		hole1 = Part.Circle(Base.Vector(6+360,0, 9.0 ),Base.Vector(0,0,1),2.1 )
+		aWire=Part.Wire([hole1.toShape()])
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_01')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+
+		hole2 = Part.Circle(Base.Vector(360 -6,0, 9.0 ),Base.Vector(0,0,1),2.1 )
+		aWire=Part.Wire([hole2.toShape()])
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_02')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+
+
+	return x,y  
+
+def dome4_help(show ):
+	
+	circ = Part.Circle(Base.Vector(500,0, 9.0 ),Base.Vector(0,0,1),21. )
+	circ1 = Part.Circle(Base.Vector(500,0, 9.0 ),Base.Vector(0,0,1),20.8 )
+
+	if( show):
+		aWire=Part.Wire([circ.toShape()])
+		
+		#s1 =  int(72-s)
+		#print("s1",s1,"s",s )
+		#Part.show(circ.toShape())
+		p1=App.ActiveDocument.addObject("Part::Feature",'outer_0_9')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+
+		aWire=Part.Wire([circ1.toShape()])
+		
+		#s1 =  int(72-s)
+		#print("s1",s1,"s",s )
+		#Part.show(circ.toShape())
+		p1=App.ActiveDocument.addObject("Part::Feature",'outer_0_5')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+
+
+
+
+
+		hole1 = Part.Circle(Base.Vector(6+500,0, 9.0 ),Base.Vector(0,0,1),2.1 )
+		aWire=Part.Wire([hole1.toShape()])
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_01')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+
+		hole2 = Part.Circle(Base.Vector(500 -6,0, 9.0 ),Base.Vector(0,0,1),2.1 )
+		aWire=Part.Wire([hole2.toShape()])
+		p1=App.ActiveDocument.addObject("Part::Feature",'hole_02')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)		
+	
+
+def end_disk_footer(show):
+	
+	
+	global centerx
+	global centery
+	global inner_radius   #95
+	global outer_radius     #110
+	global middle_radius  
+	global hole_radius 
+	global pocket_radius
+
+	gamma_half = 36 # point to the footer_circle
+	gamma_offset = -90 
+	footer_radius = 10
+
+	epsilon = 180 / math.pi * math.atan( footer_radius / ( outer_radius -footer_radius ))
+
+
+	outer_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius)
+	if show == 1:
+		Part.show( outer_circle.toShape())
+		
+	arc1 = Part.Arc(outer_circle, (+gamma_half  + gamma_offset) /180. *pi, (-gamma_half + gamma_offset)/180. *pi  )
+	arc2 = Part.Arc(outer_circle, (+epsilon +gamma_half  + gamma_offset) /180. *pi, (-epsilon -gamma_half + gamma_offset)/180. *pi  )
+	
+	arc_pocket = Part.Arc(outer_circle,(-epsilon -gamma_half + gamma_offset)/180. *pi, (+epsilon +gamma_half  + gamma_offset) /180. *pi  )
+	
+	
+	#Part.show( arc1.toShape())
+	
+	#Part.show( arc2.toShape()) #bigger one
+	
+	
+	v1=arc1.EndPoint
+	v0 = Base.Vector(0,0,0)
+	dir = v1 - v0
+	
+	dirnorm= dir.normalize() # points downwards
+	inwards = dirnorm.normalize().multiply(-10.) 
+	center = v1.add( inwards )
+	footer_circle = Part.Circle(center ,Base.Vector(0,0,1),10.)
+	#footer_arc = Part.Arc(footer_circle, (180 - gamma_half ) /180. *pi, (90 -gamma_half)/180. *pi  )
+	footer_arc = Part.Arc(footer_circle, (90 -gamma_half)/180. *pi ,(180 - gamma_half ) /180. *pi )
+	#footer_arc = Part.Arc(footer_circle, (180 - gamma_half ) /180. *pi, (90 -gamma_half)/180. *pi  )
+	if( 0):
+		Part.show( footer_arc.toShape())
+	
+	hinge_circle = Part.Circle(center ,Base.Vector(0,0,1),5.)
+	if( show == 1 ):
+		Part.show( hinge_circle.toShape())
+	hole_circle = Part.Circle(center ,Base.Vector(0,0,1),1.6)
+	if( show == 1 ):
+		Part.show( hole_circle.toShape())
+	
+	
+	
+	v2 = footer_arc.EndPoint
+	v3 = arc2.EndPoint
+	
+	l1=Part.LineSegment(v2,v3 )
+	l1s=l1.toShape();
+	if( 0):
+		Part.show( l1s)
+	
+	inner_foot_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius-2 * footer_radius)
+	
+	#inner_foot_arc = Part.Arc(inner_foot_circle, (90 +gamma_half)/180. *pi ,(90 - gamma_half ) /180. *pi )
+	inner_foot_arc = Part.Arc(inner_foot_circle, (90 -gamma_half+180 )/180. *pi ,(90 + gamma_half + 180 ) /180. *pi )
+	if( 0):
+		Part.show( inner_foot_arc.toShape())
+	
+	##################
+	#  footer part	left							
+	
+	
+	footer_part_c = Part.Circle(center ,Base.Vector(0,0,1),10. - 0.2)
+	footer_part_arc = Part.Arc(footer_part_c, (90-gamma_half)/180. *pi ,(-90 - gamma_half ) /180. *pi )
+
+	#Part.show( footer_part_arc.toShape())
+	
+	foot_part_inner_c = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius - 2 * footer_radius + 0.2)
+	foot_part_inner_a = Part.Arc(foot_part_inner_c, (-90 -gamma_half)/180. *pi ,(-90 ) /180. *pi )
+	#Part.show( foot_part_inner_a.toShape())
+	
+	foot_part_outer_c = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius -0.2 )
+	foot_part_outer_a = Part.Arc(foot_part_outer_c, (-90 -gamma_half)/180. *pi ,(-90 ) /180. *pi )
+	#Part.show( foot_part_outer_a.toShape())
+	
+	v6 = foot_part_outer_a.EndPoint
+	v7 = foot_part_inner_a.EndPoint
+	
+	
+	l6=Part.LineSegment(v6,v7 )
+	l6s=l6.toShape();	
+	#Part.show( l6s)
+		
+	aWire=Part.Wire([footer_part_arc.toShape(),foot_part_inner_a.toShape(),l6s,foot_part_outer_a.toShape() ])
+	if show == 2:
+		p1=App.ActiveDocument.addObject("Part::Feature",'footer_outer_cut')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (0.00,0.00,1.00)		
+
+	part_hinge_c = Part.Circle(center ,Base.Vector(0,0,1),5.+.1)
+	
+	#Part.show( part_hinge_c.toShape())
+	aWire=Part.Wire([part_hinge_c.toShape() ])
+	if show == 2:
+		
+		p1=App.ActiveDocument.addObject("Part::Feature",'footer_hole')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (0.00,0.00,1.00)		
+
+	v8 = footer_arc.StartPoint
+	v9 = footer_arc.EndPoint	
+	
+	part_hinge_spring_c1 = Part.Circle(v8 , Base.Vector(0,0,1),1.6)
+	part_hinge_spring_c2 = Part.Circle(v9 ,Base.Vector(0,0,1),1.6)
+	
+	if( show == 2 ):
+		Part.show( part_hinge_spring_c2.toShape())
+		Part.show( part_hinge_spring_c1.toShape())
+	
+	
+	part_hinge_spring_hole1 = Part.Circle(Base.Vector(0,-outer_radius+10 ,1) ,Base.Vector(0,0,1),1.6)
+	part_hinge_spring_hole1s = part_hinge_spring_hole1.toShape()
+	part_hinge_spring_hole1s.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -22)
+	if( show == 2 ):
+		Part.show( part_hinge_spring_hole1s)
+	
+	part_hinge_spring_hole2 = Part.Circle(Base.Vector(0,-outer_radius+10 ,1) ,Base.Vector(0,0,1),1.6)
+	part_hinge_spring_hole2s = part_hinge_spring_hole2.toShape()
+	part_hinge_spring_hole2s.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -10)
+	if( show == 2 ):
+		Part.show( part_hinge_spring_hole2s)
+	
+	
+	
+	############################
+	#right half 
+	#arc11 = Part.Arc(outer_circle, (-gamma_half  + gamma_offset) /180. *pi, (+gamma_half + gamma_offset)/180. *pi  )
+	#arc12 = Part.Arc(outer_circle, (-epsilon -gamma_half  + gamma_offset) /180. *pi, (+epsilon +gamma_half + gamma_offset)/180. *pi  )
+	
+	
+	
+	#Part.show( arc1.toShape())
+	#Part.show( arc12.toShape())
+	
+	
+	v11=arc1.StartPoint
+	v10 = Base.Vector(0,0,0)
+	dir = v11 - v10
+	
+	dirnorm= dir.normalize() # points downwards
+	inwards = dirnorm.normalize().multiply(-10.) 
+	center = v11.add( inwards )
+	footer_circle2 = Part.Circle(center ,Base.Vector(0,0,1),10.)
+	footer_arc2 = Part.Arc(footer_circle2, (gamma_half)/180. *pi ,(90 + gamma_half ) /180. *pi )
+	if( 0):
+		Part.show( footer_arc2.toShape())
+	
+	if show == 1 :
+		hinge_circle = Part.Circle(center ,Base.Vector(0,0,1),5.)
+		Part.show( hinge_circle.toShape())
+		hole_circle = Part.Circle(center ,Base.Vector(0,0,1),1.6)
+		Part.show( hole_circle.toShape())
+		
+	
+	v12 = footer_arc2.StartPoint
+	v13 = arc2.StartPoint
+	
+	l11=Part.LineSegment(v12,v13 )
+	l11s=l11.toShape();	
+	if( 0):
+		Part.show( l11s)
+	
+	
+	aWire=Part.Wire([l1s,footer_arc.toShape(), inner_foot_arc.toShape(),footer_arc2.toShape(), l11s, arc_pocket.toShape() ])
+	if show == 1 :
+		p1=App.ActiveDocument.addObject("Part::Feature",'inner_pocket')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+		
+	
+	spring1 = rect( 0, -outer_radius + 2* footer_radius + 10, 4, 20 ) 	
+	spring1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -gamma_half )
+	if( show == 1 ):
+			Part.show( spring1)			
+		
+	spring2 = rect( 0, -outer_radius + 2* footer_radius + 10, 4, 20 ) 	
+	spring2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), +gamma_half )
+	if( show == 1 ):
+		Part.show( spring2)			
+			
+																																						
+																	
+				
+	if 0:					
+		v2 = v1.add( -inwards ) 
+		l1=Part.LineSegment(v1,v2 )
+		l1s=l1.toShape();	
+		Part.show( l1s)
+		dirnorm.normalize()
+		middle = Base.Vector(-dirnorm.y,dirnorm.x,0).multiply(10.)
+		center = v2.add( middle )
+		dirnorm.normalize()
+		ortho = Base.Vector(-dirnorm.y,dirnorm.x,0).multiply(20.)
+		v3  = v2.add( ortho )
+		l2=Part.LineSegment(v2,v3 )
+		l2s=l2.toShape();	
+		Part.show( l2s)
+		
+		footer_circle = Part.Circle(center ,Base.Vector(0,0,1),10.)
+		Part.show( footer_circle.toShape())
+		
+	
+	
+	
+	if show == 1:
+		hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
+		pocket= Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),pocket_radius)
+		
+		
+		
+		hole_wire1 = Part.Wire([ hole.toShape() ] )
+		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20. + 90.)
+		
+		pocket_wire1 = Part.Wire([ pocket.toShape() ] )
+		pocket_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20.+ 90. )
+		
+		
+		
+		hole_wire2 = Part.Wire([ hole.toShape() ] )
+		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160. + 90. )
+		
+		pocket_wire2 = Part.Wire([ pocket.toShape() ] )
+		pocket_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160 + 90.)
+		
+		
+		
+		hole_wire3 = Part.Wire([ hole.toShape() ] )
+		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. + 90.)
+		
+		pocket_wire3 = Part.Wire([ pocket.toShape() ] )
+		pocket_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90 + 90.)
+		
+		
+		#Part.show( inner_circle.toShape() )
+		#Part.show( outer_circle.toShape() )
+		
+		Part.show( hole_wire1)
+		Part.show( hole_wire2)
+		Part.show( hole_wire3)
+		
+		Part.show( pocket_wire1)
+		Part.show( pocket_wire2)
+		Part.show( pocket_wire3)
+
+	if show == 1:
+		offs = 18
+		hole_radius = 1.6
+
+		screw1 = Part.Circle(Base.Vector(centerx+ outer_radius-10,centery,0),Base.Vector(0,0,1),hole_radius)
+		screw1w = Part.Wire([ screw1.toShape() ] )
+		screw1w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 0* 72. + offs )
+		Part.show( screw1w )
+		
+		screw2 = Part.Circle(Base.Vector(centerx+ outer_radius-10,centery,0),Base.Vector(0,0,1),hole_radius)
+		screw2w = Part.Wire([ screw2.toShape() ] )
+		screw2w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 1* 72. +offs )
+		Part.show( screw2w )
+		
+	
+		screw3 = Part.Circle(Base.Vector(centerx+ outer_radius-10,centery,0),Base.Vector(0,0,1),hole_radius)
+		screw3w = Part.Wire([ screw3.toShape() ] )
+		screw3w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 2* 72. + offs)
+		Part.show( screw3w )
+		
+	
+		screw4 = Part.Circle(Base.Vector(centerx+ outer_radius-10,centery,0),Base.Vector(0,0,1),hole_radius)
+		screw4w = Part.Wire([ screw4.toShape() ] )
+		screw4w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 3* 72. + offs)
+		Part.show( screw4w )
+	
+		screw5 = Part.Circle(Base.Vector(centerx+ outer_radius-10,centery,0),Base.Vector(0,0,1),hole_radius)
+		screw5w = Part.Wire([ screw5.toShape() ] )
+		screw5w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 4* 72. +offs)
+		Part.show( screw5w )
+
+
+
+a = 17
 
 
 if a ==1 :
-
 	end_disk()
 
 
@@ -1783,3 +2486,16 @@ if a == 14:
 if a == 15:
 	two_speakers_plate(0, 0, 0,0)
 
+if a == 16:
+		
+	x,y = dome1(1)	
+	x,y	= dome2(x,y,0)
+	x,y	= dome3(x,y,0)
+	x,y	= dome4(x,y,0)
+	dome4_help(0 )
+	
+if a ==17 :
+	end_disk_footer(1)
+
+if a ==18 :
+	end_disk_footer(2)
