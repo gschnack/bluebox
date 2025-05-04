@@ -2492,6 +2492,57 @@ def getWireClosed():
 	
 	return( w )
 
+
+# three holes for connecting the plateds with each other.
+
+def make_holes(show):
+	
+	offs = 180
+	
+	if show == 1:
+		hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
+		pocket= Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),pocket_radius)
+		
+		
+		
+		hole_wire1 = Part.Wire([ hole.toShape() ] )
+		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20. + offs)
+		
+		pocket_wire1 = Part.Wire([ pocket.toShape() ] )
+		pocket_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20.+ offs )
+		
+		
+		
+		hole_wire2 = Part.Wire([ hole.toShape() ] )
+		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160. + offs )
+		
+		pocket_wire2 = Part.Wire([ pocket.toShape() ] )
+		pocket_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160 + offs)
+		
+		
+		
+		hole_wire3 = Part.Wire([ hole.toShape() ] )
+		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. + offs)
+		
+		pocket_wire3 = Part.Wire([ pocket.toShape() ] )
+		pocket_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90 + offs)
+		
+		
+		#Part.show( inner_circle.toShape() )
+		#Part.show( outer_circle.toShape() )
+		
+		Part.show( hole_wire1)
+		Part.show( hole_wire2)
+		Part.show( hole_wire3)
+		
+		Part.show( pocket_wire1)
+		Part.show( pocket_wire2)
+		Part.show( pocket_wire3)
+
+
+
+
+
 def power_switch_disk( show):
 	
 	global VECTORLIST
@@ -2734,12 +2785,11 @@ def power_switch_disk( show):
 	moveWire ( 0, 3.2,0 )
 	moveWire ( -1.5, 0,0 )
 	moveWire ( 0, 7,0 )
-	moveWire ( -4, 0,0 )
+	moveWire ( -8, 0,0 )
 	moveWire ( 0, 3.2,0 )
-	moveWire ( -40, 0,0 )
-	moveWire ( 0, 40,0 )
-	moveWire ( 20, 20,0 )
-	moveWire ( 20, 0,0 )
+	
+	
+	
 	
 	
 	
@@ -2747,10 +2797,7 @@ def power_switch_disk( show):
 	#Part.show(W )
 	
 	VECTORLIST = VECTORLIST[1:] # remove startpoint
-	
 	vl = mirrorOnY()
-	
-	
 	VECTORLIST = VECTORLIST + vl 
 	#for v in VECTORLIST:
 	#	print("v in vl ", v)
@@ -2759,25 +2806,64 @@ def power_switch_disk( show):
 	W = getWireClosed()
 	Part.show(W )
 
-	######
-	# cut off 	
-	####			
-	if  0:
-		y4 = 3.2++7+3.2 + 4
-		startWire( 0,-outer_radius + (y2+ button_y1+ button_y3 + 2* button_r +y4 ), 0 )
-		moveWire ( -40, 0,0 )
-		moveWire ( 0, 40,0 )
-		moveWire ( 20, 20,0 )
-		moveWire ( 20, 0,0 )
+	y5 = (y2+ button_y1+ button_y3 + 2* button_r ) + 2* 3.2 + 7
+	startWire( 0,-outer_radius + y5, 0 )
+	moveWire ( -39, 0,0 )
+	moveWire ( 0, 40,0 )
+	moveWire ( 20, 20,0 )
+	moveWire ( 20, 0,0 )
+	
+	VECTORLIST = VECTORLIST[1:] # remove startpoint
+	vl = mirrorOnY()
+	VECTORLIST = VECTORLIST + vl 
+	
+	
+	W = getWireClosed()
+	Part.show(W )
 		
-		VECTORLIST = VECTORLIST[1:] # remove startpoint
-		vl = mirrorOnY()
-		VECTORLIST = VECTORLIST + vl 
+	
+
+	make_holes(1)
+	
+	###########
+	# USB connector 
+	###########
+	Part.show( rect( 0,middle_radius  ,16,20 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ) )
+	Part.show( rect( 0,middle_radius+ 4  ,8,8 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ))
+	
+	
+	#######
+	# Spring
+	########
+	y5 = (y2+ button_y1+ button_y3 + 2* button_r ) + 2* 3.2 + 7
+	Part.show( rect( 0,-outer_radius + y5 - 3.2 - 7  ,5,14 ).translate(Base.Vector(-24,0 ,0.)) )
+	Part.show( rect( 0,-outer_radius + y5 - 3.2 - 7  ,5,14 ).translate(Base.Vector(+24,0 ,0.)) )
+	
+	###########
+	#Guide Acryl
+	############
+	Part.show( rect( 0,-outer_radius + 20 - 3.2 - 6  ,14,24 ))
+	
+	Part.show( rect( 0,-outer_radius + 34 - 3.2   ,14,18 ))
+	
+	#####
+	# Fix holes
+	######	
+	hole = Part.Circle(Base.Vector(0,-middle_radius+ 5 ,0),Base.Vector(0,0,1),2.1)
+	Part.show(hole.toShape().translate(Base.Vector(-12,0 ,0.)) )	
+	hole = Part.Circle(Base.Vector(0,-middle_radius+ 5 ,0),Base.Vector(0,0,1),2.1)
+	Part.show(hole.toShape().translate(Base.Vector(+12,0 ,0.)) )	
 		
-		W = getWireClosed()
-		Part.show(W )
-
-
+	hole = Part.Circle(Base.Vector(0, 8 ,0),Base.Vector(0,0,1),2.1)
+	Part.show(hole.toShape().translate(Base.Vector(-14,0 ,0.)) )	
+	hole = Part.Circle(Base.Vector(0, 8 ,0),Base.Vector(0,0,1),2.1)
+	Part.show(hole.toShape().translate(Base.Vector(+14,0 ,0.)) )	
+		
+	
+			
+					
+									
+					
 
 a = 19
 
