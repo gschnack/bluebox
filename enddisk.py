@@ -2414,8 +2414,372 @@ def end_disk_footer(show):
 		Part.show( screw5w )
 
 
+def my_arc(center,  start_angle,end_angle, radius):
+	
+	circle = Part.Circle(center,Base.Vector(0,0,1),radius)
+	arc = Part.Arc(circle,start_angle /180. *pi, end_angle/180. *pi  )
+	return arc.StartPoint ,arc.EndPoint, arc.toShape()
 
-a = 17
+
+
+VECTORLIST =[]
+LASTVECTOR = Base.Vector(0.,0.,0.)
+
+
+def startWire( x,y, z ):
+	global LASTVECTOR
+	global VECTORLIST 
+	
+	VECTORLIST.clear()				
+	LASTVECTOR = Base.Vector(x,y,z)
+	VECTORLIST.append( LASTVECTOR )
+
+
+def moveWire( dx,dy,dz ):
+	global LASTVECTOR
+	global SHAPELIST		
+	v = LASTVECTOR + Base.Vector(dx,dy,dz)
+	VECTORLIST.append( v )
+	#l=Part.LineSegment(LASTVECTOR, v )	
+	
+	#SHAPELIST.append( l.toShape() )
+	LASTVECTOR = v
+
+	return
+
+def mirrorOnY():  # from x to negative x
+	global VECTORLIST
+	newvl=[]
+	vl = VECTORLIST.copy() 
+	vl.reverse()
+	first = True
+	for v in vl:
+		newvl.append( Base.Vector(-v.x ,v.y,v.z))
+	
+		
+	return newvl
+
+	
+def getWire():
+	global VECTORLIST
+	
+	SHAPELIST = []
+	first = 0
+	for v in VECTORLIST:
+		print("v = ",v )
+		if first == 0:
+			last = v 
+			first = first +1 
+			continue
+		else:
+			if   last.isEqual(v, 0.01) == False :
+				  
+				l=Part.LineSegment(last, v )	
+				SHAPELIST.append( l.toShape()) 
+				last = v
+			else:
+				print(" equal points", first )
+				
+	w =Part.Wire([ l for l in SHAPELIST]  )
+	return w 
+
+def getWireClosed():
+	global VECTORLIST
+	
+	VECTORLIST.append( VECTORLIST[0] )		
+	
+	w = getWire()
+	
+	return( w )
+
+def power_switch_disk( show):
+	
+	global VECTORLIST
+	
+	button_x1 = 30
+	button_x2 = 5
+	button_y1 = 8
+	button_y2 = 3
+	button_y3 = button_y2 + 2
+	
+	
+	button_r = 1.6 
+	
+	eps = 180/ pi * math.sin( 0.2 /outer_radius )
+	print( "eps", eps )
+	gamma_half = 180/ pi * math.sin( button_x1/outer_radius ) 
+	gamma_half_eps = gamma_half + eps
+
+	gamma_offset = -90
+	
+
+	outer_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius)
+	#if show == 1:
+	Part.show( outer_circle.toShape())
+		
+	not_button_arc = Part.Arc(outer_circle, (+gamma_half_eps  + gamma_offset) /180. *pi, (-gamma_half_eps + gamma_offset)/180. *pi  )
+	button_arc = Part.Arc(outer_circle, (-gamma_half + gamma_offset)/180. * pi, (+gamma_half  + gamma_offset) /180. *pi  )
+
+	not_button_arc_inv = Part.Arc(outer_circle,  (-gamma_half_eps + gamma_offset)/180. *pi, (+gamma_half_eps  + gamma_offset) /180. *pi  )
+
+
+
+	if show == 1:
+		Part.show( button_arc.toShape())
+		Part.show( not_button_arc.toShape())
+	
+	
+	
+	
+	###############
+	# left Button
+	###############
+	
+	v2 = button_arc.StartPoint
+	v3 = v2 + Base.Vector(0,button_y1 ,0)
+	
+	l1=Part.LineSegment(v2,v3 )
+	l1s=l1.toShape()
+	if show == 1:
+		Part.show( l1s)
+	
+	center = v3 + Base.Vector(-button_r ,0 ,0)
+	sp, ep, arc1s =  my_arc( center, 0,90 , button_r ) # switch ep, sp due to anticlockwise rotation  
+	v3a = ep
+	if show == 1:
+		Part.show(arc1s)
+	v4 = v3a + Base.Vector(-button_x2 ,0 ,0)
+	
+	l2=Part.LineSegment(v3a,v4 )
+	l2s=l2.toShape()
+	if show == 1:
+		Part.show( l2s)
+	
+	
+	center = v4 + Base.Vector(0 ,button_r ,0)
+	ep, sp, arc2s =  my_arc( center, -180,-90 , button_r ) # switch ep, sp due to anticlockwise rotation  
+	
+	v5 = ep + Base.Vector(0 ,button_y2 ,0)
+	
+	l3=Part.LineSegment(ep,v5 )
+	l3s=l3.toShape()
+	if show == 1:
+		Part.show( l3s)
+		Part.show( arc2s)
+		
+	
+	##############
+	#Right Button
+	##############
+	
+	v12 = button_arc.EndPoint
+	v13 = v12 + Base.Vector(0,button_y1 ,0)
+	
+	l11=Part.LineSegment(v12,v13 )
+	l11s=l11.toShape()
+	if show == 1:
+		Part.show( l11s)
+	
+	center = v13 + Base.Vector(button_r ,0 ,0)
+	ep, sp, arc3s =  my_arc( center, 90,180 , button_r ) # switch ep, sp due to anticlockwise rotation  
+	v13a = ep
+	if show == 1:
+		Part.show(arc3s)
+	v14 = v13a + Base.Vector(button_x2 ,0 ,0)
+	
+	l12=Part.LineSegment(v13a,v14 )
+	
+	
+	
+	
+	#v14 = v13 + Base.Vector(button_x2 ,0 ,0)
+	
+	l12=Part.LineSegment(v13a,v14 )
+	l12s=l12.toShape()
+	if show == 1:
+		Part.show( l12s)
+	
+	
+	center = v14 + Base.Vector(0 ,button_r ,0)
+	sp, ep, arc4s =  my_arc( center, -90,0, button_r ) # switch ep, sp due to anticlockwise rotation  
+	
+	v15 = ep + Base.Vector(0 ,button_y2 ,0)
+	
+	l13=Part.LineSegment(ep,v15 )
+	l13s=l13.toShape()
+	if show == 1:
+		Part.show( l13s)
+		
+	Part.show( arc4s)
+	
+	l14=Part.LineSegment(v15, v5 )
+	l14s=l14.toShape()
+	if show == 1:
+		Part.show( l14s)
+	
+	aWire=Part.Wire([ button_arc.toShape() , l1s, arc1s, l2s, arc2s, l3s, l14s, l13s, arc4s, l12s, arc3s,l11s ])
+	p1=App.ActiveDocument.addObject("Part::Feature",'button')
+	p1.Shape = aWire
+	p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+	
+	
+	###############
+	# left DISK
+	###############
+	
+	v32 = not_button_arc.EndPoint
+	v33 = v32 + Base.Vector(0,button_y1 ,0)
+	
+	l31=Part.LineSegment(v32,v33 )
+	l31s=l31.toShape()
+	if show == 2:
+		Part.show( l31s)
+	
+	center = v33 + Base.Vector(-(button_r-0.2 ) ,0 ,0)
+	sp, ep, arc1s =  my_arc( center, 0,90 , button_r - 0.2 ) # switch ep, sp due to anticlockwise rotation  
+	v33a = ep
+	if show == 2:
+		Part.show(arc1s)
+	v34 = v33a + Base.Vector(-button_x2 ,0 ,0)
+	
+	l32=Part.LineSegment(v33a,v34 )
+	l32s=l32.toShape()
+	if show == 2:
+		Part.show( l32s)
+	
+	
+	center = v34 + Base.Vector(0 ,button_r+ 0.2 ,0)
+	ep, sp, arc2s =  my_arc( center, -180,-90 , button_r+0.2 ) # switch ep, sp due to anticlockwise rotation  
+	
+	v35 = ep + Base.Vector(0 ,button_y3 ,0)
+	
+	l33=Part.LineSegment(ep,v35 )
+	l33s=l33.toShape()
+	if show == 2:
+		Part.show( l33s)
+		Part.show( arc2s)
+		
+	
+	##############
+	#Right DISK
+	##############
+	
+	v42 = not_button_arc.StartPoint
+	v43 = v42 + Base.Vector(0,button_y1 ,0)
+	
+	l41=Part.LineSegment(v42,v43 )
+	l41s=l41.toShape()
+	if show == 2:
+		Part.show( l41s)
+	
+	center = v43 + Base.Vector(button_r-0.2 ,0 ,0)
+	ep, sp, arc3s =  my_arc( center, 90,180 , button_r-0.2 ) # switch ep, sp due to anticlockwise rotation  
+	v43a = ep
+	if show == 2:
+		Part.show(arc3s)
+	v44 = v43a + Base.Vector(button_x2 ,0 ,0)
+	
+	l42=Part.LineSegment(v43a,v44 )
+		
+	
+	#v14 = v13 + Base.Vector(button_x2 ,0 ,0)
+	
+	l42=Part.LineSegment(v43a,v44 )
+	l42s=l42.toShape()
+	if show == 2:
+		Part.show( l42s)
+	
+	
+	center = v44 + Base.Vector(0 ,button_r+0.2 ,0)
+	sp, ep, arc4s =  my_arc( center, -90,0, button_r+0.2 ) # switch ep, sp due to anticlockwise rotation  
+	
+	v45 = ep + Base.Vector(0 ,button_y3 ,0)
+	
+	l43=Part.LineSegment(ep,v45 )
+	l43s=l43.toShape()
+	if show == 2:
+		Part.show( l43s)
+		
+	Part.show( arc4s)
+	
+	l44=Part.LineSegment(v35, v45 )
+	l44s=l44.toShape()
+	if show == 2:
+		Part.show( l44s)
+		Part.show( not_button_arc_inv.toShape() )
+	
+	aWire=Part.Wire([ not_button_arc_inv.toShape() , l31s, arc1s, l32s, arc2s, l33s, l44s, l43s, arc4s, l42s, arc3s,l41s ])
+	p1=App.ActiveDocument.addObject("Part::Feature",'button_pocket')
+	p1.Shape = aWire
+	p1.ViewObject.LineColor = (0.00,0.00,1.00)	
+	
+	
+	#################
+	# PCB with switch
+	#################
+	
+	y1 = outer_radius* math.cos(gamma_half/180 *math.pi) 
+	y2 = outer_radius - y1
+	
+	v0  = Base.Vector(0, -outer_radius  ,0)
+	v1  = v0 + Base.Vector(0, y2+ button_y1+ button_y3 + 2* button_r, 0 )
+	
+	#l1 = Part.LineSegment(v0, v1 )
+		
+	#Part.show( l1.toShape() )
+	#v0 = 
+	
+	startWire( 0,-outer_radius + (y2+ button_y1+ button_y3 + 2* button_r ), 0 )
+	moveWire ( -2.1, 0,0 )
+	moveWire ( 0, 3.2,0 )
+	moveWire ( -1.5, 0,0 )
+	moveWire ( 0, 7,0 )
+	moveWire ( -4, 0,0 )
+	moveWire ( 0, 3.2,0 )
+	moveWire ( -40, 0,0 )
+	moveWire ( 0, 40,0 )
+	moveWire ( 20, 20,0 )
+	moveWire ( 20, 0,0 )
+	
+	
+	
+	#W = getWire()
+	#Part.show(W )
+	
+	VECTORLIST = VECTORLIST[1:] # remove startpoint
+	
+	vl = mirrorOnY()
+	
+	
+	VECTORLIST = VECTORLIST + vl 
+	#for v in VECTORLIST:
+	#	print("v in vl ", v)
+	
+	
+	W = getWireClosed()
+	Part.show(W )
+
+	######
+	# cut off 	
+	####			
+	if  0:
+		y4 = 3.2++7+3.2 + 4
+		startWire( 0,-outer_radius + (y2+ button_y1+ button_y3 + 2* button_r +y4 ), 0 )
+		moveWire ( -40, 0,0 )
+		moveWire ( 0, 40,0 )
+		moveWire ( 20, 20,0 )
+		moveWire ( 20, 0,0 )
+		
+		VECTORLIST = VECTORLIST[1:] # remove startpoint
+		vl = mirrorOnY()
+		VECTORLIST = VECTORLIST + vl 
+		
+		W = getWireClosed()
+		Part.show(W )
+
+
+
+a = 19
 
 
 if a ==1 :
@@ -2499,3 +2863,10 @@ if a ==17 :
 
 if a ==18 :
 	end_disk_footer(2)
+
+
+if a ==19 :
+	power_switch_disk(0)
+
+
+
