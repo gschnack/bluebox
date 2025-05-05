@@ -2447,6 +2447,24 @@ def moveWire( dx,dy,dz ):
 
 	return
 
+def absWire( x,y,z ):
+	global LASTVECTOR
+	global SHAPELIST		
+	v = Base.Vector(x,y,z)
+	VECTORLIST.append( v )
+	#l=Part.LineSegment(LASTVECTOR, v )	
+	
+	#SHAPELIST.append( l.toShape() )
+	LASTVECTOR = v
+
+	return
+
+
+
+
+
+
+
 def mirrorOnY():  # from x to negative x
 	global VECTORLIST
 	newvl=[]
@@ -2482,6 +2500,32 @@ def getWire():
 				
 	w =Part.Wire([ l for l in SHAPELIST]  )
 	return w 
+
+def getShapeList():
+	global VECTORLIST
+	
+	SHAPELIST = []
+	first = 0
+	for v in VECTORLIST:
+		print("v = ",v )
+		if first == 0:
+			last = v 
+			first = first +1 
+			continue
+		else:
+			if   last.isEqual(v, 0.01) == False :
+				  
+				l=Part.LineSegment(last, v )	
+				SHAPELIST.append( l.toShape()) 
+				last = v
+			else:
+				print(" equal points", first )
+				
+	return SHAPELIST 
+
+
+
+
 
 def getWireClosed():
 	global VECTORLIST
@@ -2840,7 +2884,7 @@ def power_switch_disk( show):
 	Part.show( rect( 0,-outer_radius + y5 - 3.2 - 7  ,5,14 ).translate(Base.Vector(+24,0 ,0.)) )
 	
 	###########
-	#Guide Acryl
+	#Guide Acryl pocket
 	############
 	Part.show( rect( 0,-outer_radius + 20 - 3.2 - 6  ,14,24 ))
 	
@@ -2860,9 +2904,35 @@ def power_switch_disk( show):
 	Part.show(hole.toShape().translate(Base.Vector(+14,0 ,0.)) )	
 		
 	
-			
-					
-									
+	######		
+	# Acryl
+	######				
+	
+	alpha_half = 180/ pi * math.sin( 7/outer_radius ) 
+	
+	gamma_offset = -90
+	
+
+	acryl_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius)
+	#if show == 1:
+	#Part.show( outer_circle.toShape())
+		
+	acryl_arc = Part.Arc(outer_circle, (-alpha_half  + gamma_offset) /180. *pi, (+alpha_half + gamma_offset)/180. *pi  )
+	acryl_arcs= acryl_arc.toShape()
+	Part.show( acryl_arcs)
+	
+	startWire(acryl_arc.StartPoint.x,acryl_arc.StartPoint.y, 0 )
+	moveWire( 0, 60,0 )
+	moveWire( 14, 0,0 )
+	absWire(acryl_arc.EndPoint.x,acryl_arc.EndPoint.y, 0 )
+	
+	S = getShapeList()
+	W1 = Part.Wire( S + [ acryl_arcs])
+	
+	Part.show(W1 )
+		
+																	
+																									
 					
 
 a = 19
