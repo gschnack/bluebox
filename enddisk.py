@@ -2579,9 +2579,9 @@ def make_holes(show):
 		Part.show( hole_wire2)
 		Part.show( hole_wire3)
 		
-		Part.show( pocket_wire1)
-		Part.show( pocket_wire2)
-		Part.show( pocket_wire3)
+		#Part.show( pocket_wire1)
+		#Part.show( pocket_wire2)
+		#Part.show( pocket_wire3)
 
 
 
@@ -2610,7 +2610,14 @@ def power_switch_disk( show):
 
 	outer_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),outer_radius)
 	#if show == 1:
-	Part.show( outer_circle.toShape())
+	#	Part.show( outer_circle.toShape())
+	if show == 1:
+		aWire=Part.Wire([ outer_circle.toShape() ])
+		p1=App.ActiveDocument.addObject("Part::Feature",'outer_cut')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (0.00,0.00,1.00)	
+	
+		
 		
 	not_button_arc = Part.Arc(outer_circle, (+gamma_half_eps  + gamma_offset) /180. *pi, (-gamma_half_eps + gamma_offset)/180. *pi  )
 	button_arc = Part.Arc(outer_circle, (-gamma_half + gamma_offset)/180. * pi, (+gamma_half  + gamma_offset) /180. *pi  )
@@ -2619,9 +2626,9 @@ def power_switch_disk( show):
 
 
 
-	if show == 1:
-		Part.show( button_arc.toShape())
-		Part.show( not_button_arc.toShape())
+	#if show == 1:
+	#	Part.show( button_arc.toShape())
+	#	Part.show( not_button_arc.toShape())
 	
 	
 	
@@ -2635,20 +2642,20 @@ def power_switch_disk( show):
 	
 	l1=Part.LineSegment(v2,v3 )
 	l1s=l1.toShape()
-	if show == 1:
-		Part.show( l1s)
+	#if show == 1:
+	#	Part.show( l1s)
 	
 	center = v3 + Base.Vector(-button_r ,0 ,0)
 	sp, ep, arc1s =  my_arc( center, 0,90 , button_r ) # switch ep, sp due to anticlockwise rotation  
 	v3a = ep
-	if show == 1:
-		Part.show(arc1s)
+	#if show == 1:
+	#	Part.show(arc1s)
 	v4 = v3a + Base.Vector(-button_x2 ,0 ,0)
 	
 	l2=Part.LineSegment(v3a,v4 )
 	l2s=l2.toShape()
-	if show == 1:
-		Part.show( l2s)
+	#if show == 1:
+	#	Part.show( l2s)
 	
 	
 	center = v4 + Base.Vector(0 ,button_r ,0)
@@ -2658,9 +2665,9 @@ def power_switch_disk( show):
 	
 	l3=Part.LineSegment(ep,v5 )
 	l3s=l3.toShape()
-	if show == 1:
-		Part.show( l3s)
-		Part.show( arc2s)
+	#if show == 1:
+	#	Part.show( l3s)
+	#	Part.show( arc2s)
 		
 	
 	##############
@@ -2672,14 +2679,14 @@ def power_switch_disk( show):
 	
 	l11=Part.LineSegment(v12,v13 )
 	l11s=l11.toShape()
-	if show == 1:
-		Part.show( l11s)
+	#if show == 1:
+	#	Part.show( l11s)
 	
 	center = v13 + Base.Vector(button_r ,0 ,0)
 	ep, sp, arc3s =  my_arc( center, 90,180 , button_r ) # switch ep, sp due to anticlockwise rotation  
 	v13a = ep
-	if show == 1:
-		Part.show(arc3s)
+	#if show == 1:
+	#	Part.show(arc3s)
 	v14 = v13a + Base.Vector(button_x2 ,0 ,0)
 	
 	l12=Part.LineSegment(v13a,v14 )
@@ -2691,8 +2698,8 @@ def power_switch_disk( show):
 	
 	l12=Part.LineSegment(v13a,v14 )
 	l12s=l12.toShape()
-	if show == 1:
-		Part.show( l12s)
+	#if show == 1:
+	#	Part.show( l12s)
 	
 	
 	center = v14 + Base.Vector(0 ,button_r ,0)
@@ -2702,21 +2709,22 @@ def power_switch_disk( show):
 	
 	l13=Part.LineSegment(ep,v15 )
 	l13s=l13.toShape()
-	if show == 1:
-		Part.show( l13s)
+	#if show == 1:
+	#	Part.show( l13s)
 		
-	Part.show( arc4s)
+	#Part.show( arc4s)
 	
 	l14=Part.LineSegment(v15, v5 )
 	l14s=l14.toShape()
-	if show == 1:
-		Part.show( l14s)
+	#if show == 1:
+	#	Part.show( l14s)
 	
-	aWire=Part.Wire([ button_arc.toShape() , l1s, arc1s, l2s, arc2s, l3s, l14s, l13s, arc4s, l12s, arc3s,l11s ])
-	p1=App.ActiveDocument.addObject("Part::Feature",'button')
-	p1.Shape = aWire
-	p1.ViewObject.LineColor = (1.00,0.00,0.00)	
-	
+	if show == 2:
+		aWire=Part.Wire([ button_arc.toShape() , l1s, arc1s, l2s, arc2s, l3s, l14s, l13s, arc4s, l12s, arc3s,l11s ])
+		p1=App.ActiveDocument.addObject("Part::Feature",'button')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,0.00)	
+		
 	
 	###############
 	# left DISK
@@ -2727,20 +2735,20 @@ def power_switch_disk( show):
 	
 	l31=Part.LineSegment(v32,v33 )
 	l31s=l31.toShape()
-	if show == 2:
-		Part.show( l31s)
+	#if show == 2:
+	#	Part.show( l31s)
 	
 	center = v33 + Base.Vector(-(button_r-0.2 ) ,0 ,0)
 	sp, ep, arc1s =  my_arc( center, 0,90 , button_r - 0.2 ) # switch ep, sp due to anticlockwise rotation  
 	v33a = ep
-	if show == 2:
-		Part.show(arc1s)
+	#if show == 2:
+	#	Part.show(arc1s)
 	v34 = v33a + Base.Vector(-button_x2 ,0 ,0)
 	
 	l32=Part.LineSegment(v33a,v34 )
 	l32s=l32.toShape()
-	if show == 2:
-		Part.show( l32s)
+	#if show == 2:
+	#	Part.show( l32s)
 	
 	
 	center = v34 + Base.Vector(0 ,button_r+ 0.2 ,0)
@@ -2750,9 +2758,9 @@ def power_switch_disk( show):
 	
 	l33=Part.LineSegment(ep,v35 )
 	l33s=l33.toShape()
-	if show == 2:
-		Part.show( l33s)
-		Part.show( arc2s)
+	#if show == 2:
+	#	Part.show( l33s)
+	#	Part.show( arc2s)
 		
 	
 	##############
@@ -2764,14 +2772,14 @@ def power_switch_disk( show):
 	
 	l41=Part.LineSegment(v42,v43 )
 	l41s=l41.toShape()
-	if show == 2:
-		Part.show( l41s)
+	#if show == 2:
+	#	Part.show( l41s)
 	
 	center = v43 + Base.Vector(button_r-0.2 ,0 ,0)
 	ep, sp, arc3s =  my_arc( center, 90,180 , button_r-0.2 ) # switch ep, sp due to anticlockwise rotation  
 	v43a = ep
-	if show == 2:
-		Part.show(arc3s)
+	#if show == 2:
+	#	Part.show(arc3s)
 	v44 = v43a + Base.Vector(button_x2 ,0 ,0)
 	
 	l42=Part.LineSegment(v43a,v44 )
@@ -2781,8 +2789,8 @@ def power_switch_disk( show):
 	
 	l42=Part.LineSegment(v43a,v44 )
 	l42s=l42.toShape()
-	if show == 2:
-		Part.show( l42s)
+	#if show == 2:
+	#	Part.show( l42s)
 	
 	
 	center = v44 + Base.Vector(0 ,button_r+0.2 ,0)
@@ -2792,22 +2800,23 @@ def power_switch_disk( show):
 	
 	l43=Part.LineSegment(ep,v45 )
 	l43s=l43.toShape()
-	if show == 2:
-		Part.show( l43s)
+	#if show == 2:
+	#	Part.show( l43s)
 		
-	Part.show( arc4s)
+	#Part.show( arc4s)
 	
 	l44=Part.LineSegment(v35, v45 )
 	l44s=l44.toShape()
-	if show == 2:
-		Part.show( l44s)
-		Part.show( not_button_arc_inv.toShape() )
+	#if show == 2:
+	#	Part.show( l44s)
+	#	Part.show( not_button_arc_inv.toShape() )
 	
-	aWire=Part.Wire([ not_button_arc_inv.toShape() , l31s, arc1s, l32s, arc2s, l33s, l44s, l43s, arc4s, l42s, arc3s,l41s ])
-	p1=App.ActiveDocument.addObject("Part::Feature",'button_pocket')
-	p1.Shape = aWire
-	p1.ViewObject.LineColor = (0.00,0.00,1.00)	
-	
+	if show == 1:
+		aWire=Part.Wire([ not_button_arc_inv.toShape() , l31s, arc1s, l32s, arc2s, l33s, l44s, l43s, arc4s, l42s, arc3s,l41s ])
+		p1=App.ActiveDocument.addObject("Part::Feature",'button_pocket')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (0.00,0.00,1.00)	
+		
 	
 	#################
 	# PCB with switch
@@ -2833,10 +2842,6 @@ def power_switch_disk( show):
 	moveWire ( 0, 3.2,0 )
 	
 	
-	
-	
-	
-	
 	#W = getWire()
 	#Part.show(W )
 	
@@ -2848,7 +2853,16 @@ def power_switch_disk( show):
 	
 	
 	W = getWireClosed()
-	Part.show(W )
+	#if show == 1:
+	#	Part.show(W )
+	if show == 1:
+		aWire=Part.Wire([ W ])
+		p1=App.ActiveDocument.addObject("Part::Feature",'pocket_switch')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (0.00,0.00,1.00)	
+	
+
+
 
 	y5 = (y2+ button_y1+ button_y3 + 2* button_r ) + 2* 3.2 + 7
 	startWire( 0,-outer_radius + y5, 0 )
@@ -2863,46 +2877,80 @@ def power_switch_disk( show):
 	
 	
 	W = getWireClosed()
-	Part.show(W )
+	#if show == 1:
+	#	Part.show(W )
+	if show == 1:
+		aWire=Part.Wire([ W ])
+		p1=App.ActiveDocument.addObject("Part::Feature",'inner_cut')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (0.00,0.00,1.00)	
 		
 	
-
-	make_holes(1)
+	if show == 1:
+		make_holes(1)
 	
 	###########
 	# USB connector 
 	###########
-	Part.show( rect( 0,middle_radius  ,16,20 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ) )
-	Part.show( rect( 0,middle_radius+ 4  ,8,8 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ))
-	
+	if show == 1:
+		#Part.show( rect( 0,middle_radius  ,16,20 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ) )
+		aWire=Part.Wire([ rect( 0,middle_radius  ,16,20 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ) ])
+		p1=App.ActiveDocument.addObject("Part::Feature",'usb1_pocket')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,1.00)	
+		
+		
+		#Part.show( rect( 0,middle_radius+ 4  ,8,8 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ))
+		aWire=Part.Wire([ rect( 0,middle_radius+ 4  ,8,8 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ) ])
+		p1=App.ActiveDocument.addObject("Part::Feature",'usb2_pocket')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (1.00,0.00,1.00)	
+		
 	
 	#######
 	# Spring
 	########
 	y5 = (y2+ button_y1+ button_y3 + 2* button_r ) + 2* 3.2 + 7
-	Part.show( rect( 0,-outer_radius + y5 - 3.2 - 7  ,5,14 ).translate(Base.Vector(-24,0 ,0.)) )
-	Part.show( rect( 0,-outer_radius + y5 - 3.2 - 7  ,5,14 ).translate(Base.Vector(+24,0 ,0.)) )
+	if show == 1:
+		Part.show( rect( 0,-outer_radius + y5 - 3.2 - 7  ,5,14 ).translate(Base.Vector(-24,0 ,0.)) )
+		Part.show( rect( 0,-outer_radius + y5 - 3.2 - 7  ,5,14 ).translate(Base.Vector(+24,0 ,0.)) )
 	
 	###########
 	#Guide Acryl pocket
 	############
-	Part.show( rect( 0,-outer_radius + 20 - 3.2 - 6  ,14,24 ))
 	
-	Part.show( rect( 0,-outer_radius + 34 - 3.2   ,14,18 ))
+	if show == 2:
+		aWire=Part.Wire([ rect( 0,-outer_radius + 20 - 3.2 - 6  ,14,24 ) ])
+		p1=App.ActiveDocument.addObject("Part::Feature",'pocket')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (0.00,0.00,1.00)	
+	
+	
+	
+	if show == 1:
+		#Part.show( rect( 0,-outer_radius + 34 - 3.2   ,14,18 ))
+		aWire=Part.Wire([ rect( 0,-outer_radius + 34 - 3.2   ,14,18 ) ])
+		p1=App.ActiveDocument.addObject("Part::Feature",'pocket')
+		p1.Shape = aWire
+		p1.ViewObject.LineColor = (0.00,0.00,1.00)
+	
+	
 	
 	#####
 	# Fix holes
 	######	
-	hole = Part.Circle(Base.Vector(0,-middle_radius+ 5 ,0),Base.Vector(0,0,1),2.1)
-	Part.show(hole.toShape().translate(Base.Vector(-12,0 ,0.)) )	
-	hole = Part.Circle(Base.Vector(0,-middle_radius+ 5 ,0),Base.Vector(0,0,1),2.1)
-	Part.show(hole.toShape().translate(Base.Vector(+12,0 ,0.)) )	
-		
-	hole = Part.Circle(Base.Vector(0, 8 ,0),Base.Vector(0,0,1),2.1)
-	Part.show(hole.toShape().translate(Base.Vector(-14,0 ,0.)) )	
-	hole = Part.Circle(Base.Vector(0, 8 ,0),Base.Vector(0,0,1),2.1)
-	Part.show(hole.toShape().translate(Base.Vector(+14,0 ,0.)) )	
-		
+	if show == 2:
+		hole = Part.Circle(Base.Vector(0,-middle_radius+ 5 ,0),Base.Vector(0,0,1),2.1)
+		Part.show(hole.toShape().translate(Base.Vector(-15,0 ,0.)) )	
+		hole = Part.Circle(Base.Vector(0,-middle_radius+ 5 ,0),Base.Vector(0,0,1),2.1)
+		Part.show(hole.toShape().translate(Base.Vector(+15,0 ,0.)) )	
+			
+	if show == 1:
+		hole = Part.Circle(Base.Vector(0, 8 ,0),Base.Vector(0,0,1),2.1)
+		Part.show(hole.toShape().translate(Base.Vector(-14,0 ,0.)) )	
+		hole = Part.Circle(Base.Vector(0, 8 ,0),Base.Vector(0,0,1),2.1)
+		Part.show(hole.toShape().translate(Base.Vector(+14,0 ,0.)) )	
+			
 	
 	######		
 	# Acryl
@@ -2919,7 +2967,7 @@ def power_switch_disk( show):
 		
 	acryl_arc = Part.Arc(outer_circle, (-alpha_half  + gamma_offset) /180. *pi, (+alpha_half + gamma_offset)/180. *pi  )
 	acryl_arcs= acryl_arc.toShape()
-	Part.show( acryl_arcs)
+	#Part.show( acryl_arcs)
 	
 	startWire(acryl_arc.StartPoint.x,acryl_arc.StartPoint.y, 0 )
 	moveWire( 0, 60,0 )
@@ -2928,14 +2976,14 @@ def power_switch_disk( show):
 	
 	S = getShapeList()
 	W1 = Part.Wire( S + [ acryl_arcs])
-	
-	Part.show(W1 )
+	if show == 3:
+		Part.show(W1 )
 		
 																	
 																									
 					
 
-a = 19
+a = 20
 
 
 if a ==1 :
@@ -3022,7 +3070,14 @@ if a ==18 :
 
 
 if a ==19 :
-	power_switch_disk(0)
+	# 1 = switch_disk , 2 = button, 3 = Acryl guide
+	
+	power_switch_disk(2)
+if a ==20 :
+	# 1 = switch_disk , 2 = button, 3 = Acryl guide
+	
+	power_switch_disk(1)
+
 
 
 
