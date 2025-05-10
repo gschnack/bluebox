@@ -2836,7 +2836,7 @@ def power_switch_disk( show):
 	startWire( 0,-outer_radius + (y2+ button_y1+ button_y3 + 2* button_r ), 0 )
 	moveWire ( -2.1, 0,0 )
 	moveWire ( 0, 3.2,0 )
-	moveWire ( -1.5, 0,0 )
+	moveWire ( -1.6, 0,0 )
 	moveWire ( 0, 7,0 )
 	moveWire ( -8, 0,0 )
 	moveWire ( 0, 3.2,0 )
@@ -2869,7 +2869,7 @@ def power_switch_disk( show):
 	moveWire ( -39, 0,0 )
 	moveWire ( 0, 40,0 )
 	moveWire ( 20, 20,0 )
-	moveWire ( 20, 0,0 )
+	#moveWire ( 20, 0,0 )
 	
 	VECTORLIST = VECTORLIST[1:] # remove startpoint
 	vl = mirrorOnY()
@@ -2901,7 +2901,7 @@ def power_switch_disk( show):
 		
 		
 		#Part.show( rect( 0,middle_radius+ 4  ,8,8 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ))
-		aWire=Part.Wire([ rect( 0,middle_radius+ 4  ,8,8 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ) ])
+		aWire=Part.Wire([ rect( 0,middle_radius+ 4  ,9.2,10 ).rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -45 ) ])
 		p1=App.ActiveDocument.addObject("Part::Feature",'usb2_pocket')
 		p1.Shape = aWire
 		p1.ViewObject.LineColor = (1.00,0.00,1.00)	
@@ -2929,7 +2929,7 @@ def power_switch_disk( show):
 	
 	if show == 1:
 		#Part.show( rect( 0,-outer_radius + 34 - 3.2   ,14,18 ))
-		aWire=Part.Wire([ rect( 0,-outer_radius + 34 - 3.2   ,14,18 ) ])
+		aWire=Part.Wire([ rect( 0,-outer_radius + 34 - 3.2 -12  ,14,46 ) ])
 		p1=App.ActiveDocument.addObject("Part::Feature",'pocket')
 		p1.Shape = aWire
 		p1.ViewObject.LineColor = (0.00,0.00,1.00)
@@ -2980,16 +2980,97 @@ def power_switch_disk( show):
 		Part.show(W1 )
 		
 																	
-																									
-					
+def disk_switch_plate(centerx,centery,show):
+	offs = 90
+	
+	disk_radius = 18
+	
+	outer_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),disk_radius)
+	if show == 1:
+		Part.show( outer_circle.toShape())
+		
+	aWire=Part.Wire([ outer_circle.toShape() ])
+	p1=App.ActiveDocument.addObject("Part::Feature",'outer_cut')
+	p1.Shape = aWire
+	p1.ViewObject.LineColor = (0.00,0.00,1.00)
+	
+	inner_circle = Part.Circle(Base.Vector(centerx,centery,0),Base.Vector(0,0,1),disk_radius-6)
+	if show == 1:
+		Part.show( inner_circle.toShape())
+		
+	aWire=Part.Wire([ inner_circle.toShape() ])
+	p1=App.ActiveDocument.addObject("Part::Feature",'inner_cut')
+	p1.Shape = aWire
+	p1.ViewObject.LineColor = (0.00,0.00,1.00)
+	
+	
+	
+	aWire=Part.Wire([ rect( 0,0 ,14.2,9.4 ) ])
+	p1=App.ActiveDocument.addObject("Part::Feature",'switch')
+	p1.Shape = aWire
+	p1.ViewObject.LineColor = (0.00,0.00,1.00)
+	
+	
+	
+	hole_radius= 1.3
+	pocket_radius = 3.0
+	
+	if show == 1:
+		hole = Part.Circle(Base.Vector(centerx+ disk_radius -3.5 ,centery,0),Base.Vector(0,0,1),hole_radius)
+		pocket= Part.Circle(Base.Vector(centerx+ disk_radius -3.5,centery,0),Base.Vector(0,0,1),pocket_radius)
+		
+		
+		
+		hole_wire1 = Part.Wire([ hole.toShape() ] )
+		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 0. + offs)
+		
+		pocket_wire1 = Part.Wire([ pocket.toShape() ] )
+		pocket_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 0.+ offs )
+		
+		
+		
+		hole_wire2 = Part.Wire([ hole.toShape() ] )
+		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 120. + offs )
+		
+		pocket_wire2 = Part.Wire([ pocket.toShape() ] )
+		pocket_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 120 + offs)
+		
+		
+		
+		hole_wire3 = Part.Wire([ hole.toShape() ] )
+		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -120. + offs)
+		
+		pocket_wire3 = Part.Wire([ pocket.toShape() ] )
+		pocket_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -120 + offs)
+		
+		
+		#Part.show( inner_circle.toShape() )
+		#Part.show( outer_circle.toShape() )
+		
+		Part.show( hole_wire1)
+		Part.show( hole_wire2)
+		Part.show( hole_wire3)																								
+																																																		
+		Part.show( pocket_wire1)
+		Part.show( pocket_wire2)
+		Part.show( pocket_wire3)
+																																																																																																		
+		fix1 = Part.Circle(Base.Vector(centerx -5 ,centery,0),Base.Vector(0,0,1),2.)
+		Part.show( fix1.toShape())
+		
+		fix2 = Part.Circle(Base.Vector(centerx +5 ,centery,0),Base.Vector(0,0,1),2.)
+		Part.show( fix2.toShape())
+				
+		
 
-a = 20
+a = 3
 
 
 if a ==1 :
 	end_disk()
-
-
+	disk_switch_plate(0,22,1)
+	#power_switch_disk(1)
+	
 	
 if a ==2 :
 	calcalpha()
@@ -3011,7 +3092,8 @@ if a == 4:
 	calcalpha()
 	print( width_plate)	
 
-	speaker_plate(0.,0. ,width_plate, 60. )
+	#speaker_plate(0.,0. ,width_plate, 60. )
+	speaker_plate(0.,0. ,width_plate, 56. )
 
 
 if a == 5: # 1 for main disk, 2 for both side disks
@@ -3078,6 +3160,15 @@ if a ==20 :
 	
 	power_switch_disk(1)
 
+if a ==21 :
+	# 1 = switch_disk , 2 = button, 3 = Acryl guide
+	
+	power_switch_disk(3)
 
+
+if a ==22 :
+	# 1 = switch_disk , 2 = button, 3 = Acryl guide
+	
+	disk_switch_plate(0,0,1)
 
 
