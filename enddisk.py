@@ -312,7 +312,7 @@ def speaker_disk(show):
 
 
 
-def speaker_disk_protect():
+def speaker_disk_protect(x,y ):
 	global thick_plate
 	global deltax		
 	
@@ -399,12 +399,13 @@ def speaker_disk_protect():
 	W1 = Part.Wire([l9s, l8s,l7s, arc3s, l1s, l2s,l3s, arc2s] )
 	#W2 = Part.Wire([ ] )
 
-
+	W1.translate(Base.Vector(x,y,0 ) )	
+	
 	Part.show( W1)
 	#Part.show( W2)
 
-
-
+	hole_radius = 2.25
+	
 	hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
 	pocket= Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),pocket_radius)
 	
@@ -417,9 +418,14 @@ def speaker_disk_protect():
 	hole_wire3 = Part.Wire([ hole.toShape() ] )
 	hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
 		
+		
+	outer_circle.translate(Base.Vector(x,y,0 ) )	
 	#Part.show( inner_circle.toShape() )
 	Part.show( outer_circle.toShape() )
 	
+	hole_wire1.translate(Base.Vector(x,y,0 ) )	
+	hole_wire2.translate(Base.Vector(x,y,0 ) )	
+	hole_wire3.translate(Base.Vector(x,y,0 ) )	
 	
 	
 
@@ -427,7 +433,14 @@ def speaker_disk_protect():
 	Part.show( hole_wire2)
 	Part.show( hole_wire3)
 	
-
+	fix1 = Part.Circle(Base.Vector(centerx -20 ,centery,0),Base.Vector(0,0,1),2.)
+	fix1.translate(Base.Vector(x,y,0 ) )
+	Part.show( fix1.toShape())
+			
+				
+	fix2 = Part.Circle(Base.Vector(centerx +20 ,centery,0),Base.Vector(0,0,1),2.)
+	fix2.translate(Base.Vector(x,y,0 ) )
+	Part.show( fix2.toShape())
 
 
 
@@ -3085,7 +3098,12 @@ if a == 3:
 	speaker_disk(0)
 
 
-	speaker_disk_protect()
+	speaker_disk_protect(0,0)
+	speaker_disk_protect(120,0)
+	speaker_disk_protect(240,0)
+	speaker_disk_protect(360,0)
+	
+	
 
 
 if a == 4:
