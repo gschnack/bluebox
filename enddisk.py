@@ -18,7 +18,7 @@ middle_radius = (inner_radius +outer_radius)/2.
 hole_radius = 2.0
 pocket_radius = 4.0
 
-thick_plate = 6.5
+thick_plate = 6.5 +0.2 # changed 15.05 
 deltax = 5.
 alpha1 = 30 # angle defining the outer thickness
 alpha2 = 0
@@ -163,30 +163,30 @@ def end_disk():
 
 	screw1 = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
 	screw1w = Part.Wire([ screw1.toShape() ] )
-	screw1w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 0* 72. )
+	screw1w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 0* 120 )
 	Part.show( screw1w )
 	
 	screw2 = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
 	screw2w = Part.Wire([ screw2.toShape() ] )
-	screw2w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 1* 72. )
+	screw2w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 1* 120 )
 	Part.show( screw2w )
 	
 
 	screw3 = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
 	screw3w = Part.Wire([ screw3.toShape() ] )
-	screw3w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 2* 72. )
+	screw3w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 2* 120 )
 	Part.show( screw3w )
 	
-
-	screw4 = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
-	screw4w = Part.Wire([ screw4.toShape() ] )
-	screw4w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 3* 72. )
-	Part.show( screw4w )
-
-	screw5 = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
-	screw5w = Part.Wire([ screw5.toShape() ] )
-	screw5w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 4* 72. )
-	Part.show( screw5w )
+	if 0:
+		screw4 = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
+		screw4w = Part.Wire([ screw4.toShape() ] )
+		screw4w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 3* 72. )
+		Part.show( screw4w )
+	
+		screw5 = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
+		screw5w = Part.Wire([ screw5.toShape() ] )
+		screw5w.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 4* 72. )
+		Part.show( screw5w )
 
 
 
@@ -204,7 +204,7 @@ def end_disk():
 #                     arc
 
 
-def speaker_disk(show):
+def speaker_disk(x,y,angle,show):
 	global thick_plate
 	global deltax		
 
@@ -212,9 +212,6 @@ def speaker_disk(show):
 	global plate_left_lower
 	global plate_right_upper
 	global plate_right_lower
-
-
-
 
 
 	
@@ -292,16 +289,37 @@ def speaker_disk(show):
 	hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160. )
 	hole_wire3 = Part.Wire([ hole.toShape() ] )
 	hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
+	
 		
+			
+					
 	#Part.show( inner_circle.toShape() )
 	#Part.show( outer_circle.toShape() )
 	
 
 	if ( show == 1 ):
+		
+		W1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), angle )
+		
+		W1.translate(Base.Vector(x,y,0 ) )	
+	
 		Part.show( W1)
 		
 		#Part.show( arc2.toShape() )
+		outer_circle.translate(Base.Vector(x,y,0 ) )	
 		
+		#Part.show( inner_circle.toShape() )
+		#Part.show( outer_circle.toShape() )
+	
+			
+		hole_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), angle )
+		hole_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), angle )
+		hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), angle )
+		
+		hole_wire1.translate(Base.Vector(x,y,0 ) )	
+		hole_wire2.translate(Base.Vector(x,y,0 ) )	
+		hole_wire3.translate(Base.Vector(x,y,0 ) )	
+	
 		Part.show( hole_wire1)
 		Part.show( hole_wire2)
 		Part.show( hole_wire3)
@@ -312,7 +330,7 @@ def speaker_disk(show):
 
 
 
-def speaker_disk_protect(x,y ):
+def speaker_disk_protect(x,y,show ):
 	global thick_plate
 	global deltax		
 	
@@ -372,8 +390,12 @@ def speaker_disk_protect(x,y ):
 	#plate_left_upper
 	#global plate_left_lower
 		
-
-
+	if show ==3:
+		vnoa1 = arc3.EndPoint
+		vnoa2 = arc3.StartPoint
+		lno_arc=Part.LineSegment(vnoa1,vnoa2 )
+		lno_arcs=lno_arc.toShape();
+		#Part.show(lno_arcs )
 
 	l1=Part.LineSegment(v0,v1 )
 	l1s=l1.toShape();
@@ -395,9 +417,15 @@ def speaker_disk_protect(x,y ):
 
 	#Part.show( arc2.toShape() )
 	#Part.show( arc3s )
+	if show == 3:
+		W1 = Part.Wire([l9s, l8s,l7s, lno_arcs, l1s, l2s,l3s, arc2s] )
 
-	W1 = Part.Wire([l9s, l8s,l7s, arc3s, l1s, l2s,l3s, arc2s] )
-	#W2 = Part.Wire([ ] )
+	else:	
+		W1 = Part.Wire([l9s, l8s,l7s, arc3s, l1s, l2s,l3s, arc2s] )
+
+	
+		
+				#W2 = Part.Wire([ ] )
 
 	W1.translate(Base.Vector(x,y,0 ) )	
 	
@@ -405,7 +433,8 @@ def speaker_disk_protect(x,y ):
 	#Part.show( W2)
 
 	hole_radius = 2.25
-	
+	pocket_radius = 3.
+			
 	hole = Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),hole_radius)
 	pocket= Part.Circle(Base.Vector(centerx+ middle_radius,centery,0),Base.Vector(0,0,1),pocket_radius)
 	
@@ -418,20 +447,39 @@ def speaker_disk_protect(x,y ):
 	hole_wire3 = Part.Wire([ hole.toShape() ] )
 	hole_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
 		
+	pocket_wire1 = Part.Wire([ pocket.toShape() ] )
+	pocket_wire1.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 20. )
+	pocket_wire2 = Part.Wire([ pocket.toShape() ] )
+	pocket_wire2.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), 160. )
+	pocket_wire3 = Part.Wire([ pocket.toShape() ] )
+	pocket_wire3.rotate(Base.Vector(0.,0.,0.),Base.Vector(0.,0.,1. ), -90. )
+		
+		
+		
 		
 	outer_circle.translate(Base.Vector(x,y,0 ) )	
 	#Part.show( inner_circle.toShape() )
 	Part.show( outer_circle.toShape() )
+	
+	pocket_wire1.translate(Base.Vector(x,y,0 ) )	
+	pocket_wire2.translate(Base.Vector(x,y,0 ) )	
+	pocket_wire3.translate(Base.Vector(x,y,0 ) )	
 	
 	hole_wire1.translate(Base.Vector(x,y,0 ) )	
 	hole_wire2.translate(Base.Vector(x,y,0 ) )	
 	hole_wire3.translate(Base.Vector(x,y,0 ) )	
 	
 	
+	
 
 	Part.show( hole_wire1)
 	Part.show( hole_wire2)
 	Part.show( hole_wire3)
+	Part.show( pocket_wire1)
+	Part.show( pocket_wire2)
+	Part.show( pocket_wire3)
+	
+	
 	
 	fix1 = Part.Circle(Base.Vector(centerx -20 ,centery,0),Base.Vector(0,0,1),2.)
 	fix1.translate(Base.Vector(x,y,0 ) )
@@ -557,7 +605,45 @@ def speaker_plate(centerx, centery, width,height):
 	Part.show(fix1.toShape())
 	Part.show(fix2.toShape())
 
+def speaker_plate_twosp(centerx, centery, width,height):
 
+	centerx =0
+	centery =0
+	speaker_diameter = 51.
+	distance_holes = 42
+
+	W =rect( 0. ,0., width , height )	
+	Part.show(W)
+	
+	y_center = 28.5
+		
+				
+	hole1 = Part.Circle(Base.Vector(centerx,centery + y_center ,0),Base.Vector(0,0,1),speaker_diameter/2.)
+		
+	Part.show(hole1.toShape())
+	
+	
+	hole2 = Part.Circle(Base.Vector(centerx,centery - y_center ,0),Base.Vector(0,0,1),speaker_diameter/2.)
+		
+	Part.show(hole2.toShape())
+	
+	
+	#hole_rect( 0. ,0., distance_holes , distance_holes,2. )
+
+	fix1 = Part.Circle(Base.Vector(centerx+15,centery +y_center,0),Base.Vector(0,0,1),2.)
+	fix2 = Part.Circle(Base.Vector(centerx-15,centery +y_center,0),Base.Vector(0,0,1),2.)
+	Part.show(fix1.toShape())
+	Part.show(fix2.toShape())
+
+	fix1 = Part.Circle(Base.Vector(centerx+15,centery -y_center,0),Base.Vector(0,0,1),2.)
+	fix2 = Part.Circle(Base.Vector(centerx-15,centery -y_center,0),Base.Vector(0,0,1),2.)
+	Part.show(fix1.toShape())
+	Part.show(fix2.toShape())
+
+	fix1 = Part.Circle(Base.Vector(centerx+85.26 /2 -4 ,centery,0),Base.Vector(0,0,1),1.6)
+	fix2 = Part.Circle(Base.Vector(centerx-85.26 /2 +4 ,centery,0),Base.Vector(0,0,1),1.6)
+	Part.show(fix1.toShape())
+	Part.show(fix2.toShape())
 
 
 def sidespeaker_disk():
@@ -2845,15 +2931,16 @@ def power_switch_disk( show):
 		
 	#Part.show( l1.toShape() )
 	#v0 = 
+	if ( 1):
+		startWire( 0,-outer_radius + (y2+ button_y1+ button_y3 + 2* button_r ), 0 )
+		moveWire ( -2.1, 0,0 )
+		moveWire ( 0, 3.2,0 )
+		moveWire ( -1.6, 0,0 )
+		moveWire ( 0, 7,0 )
+		moveWire ( -8, 0,0 )
+		moveWire ( 0, 3.2,0 )
 	
-	startWire( 0,-outer_radius + (y2+ button_y1+ button_y3 + 2* button_r ), 0 )
-	moveWire ( -2.1, 0,0 )
-	moveWire ( 0, 3.2,0 )
-	moveWire ( -1.6, 0,0 )
-	moveWire ( 0, 7,0 )
-	moveWire ( -8, 0,0 )
-	moveWire ( 0, 3.2,0 )
-	
+				
 	
 	#W = getWire()
 	#Part.show(W )
@@ -2875,15 +2962,27 @@ def power_switch_disk( show):
 		p1.ViewObject.LineColor = (0.00,0.00,1.00)	
 	
 
-
+	# inner cut
 
 	y5 = (y2+ button_y1+ button_y3 + 2* button_r ) + 2* 3.2 + 7
-	startWire( 0,-outer_radius + y5, 0 )
-	moveWire ( -39, 0,0 )
+	if (0):
+		startWire( 0,-outer_radius + +y5, 0 )
+		moveWire ( -39, 0,0 )
+		moveWire ( 0, 40,0 )
+		moveWire ( 20, 20,0 )
+		#moveWire ( 20, 0,0 )
+	startWire( 0,-outer_radius + 15, 0 )
+	moveWire ( -19, 0,0 )
+	moveWire ( -20, 20,0 )
+	#moveWire ( -39, 0,0 )
+	
+	#moveWire ( 0, 45,0 )
 	moveWire ( 0, 40,0 )
 	moveWire ( 20, 20,0 )
-	#moveWire ( 20, 0,0 )
-	
+		
+		
+			
+					
 	VECTORLIST = VECTORLIST[1:] # remove startpoint
 	vl = mirrorOnY()
 	VECTORLIST = VECTORLIST + vl 
@@ -2934,6 +3033,7 @@ def power_switch_disk( show):
 	
 	if show == 2:
 		aWire=Part.Wire([ rect( 0,-outer_radius + 20 - 3.2 - 6  ,14,24 ) ])
+		
 		p1=App.ActiveDocument.addObject("Part::Feature",'pocket')
 		p1.Shape = aWire
 		p1.ViewObject.LineColor = (0.00,0.00,1.00)	
@@ -2942,7 +3042,9 @@ def power_switch_disk( show):
 	
 	if show == 1:
 		#Part.show( rect( 0,-outer_radius + 34 - 3.2   ,14,18 ))
-		aWire=Part.Wire([ rect( 0,-outer_radius + 34 - 3.2 -12  ,14,46 ) ])
+		#aWire=Part.Wire([ rect( 0,-outer_radius + 34 - 3.2 -12  ,14,46 ) ])
+		aWire=Part.Wire([ rect( 0,-outer_radius + 19+ 3 - 3.2 -12  ,14,26 ) ])
+		
 		p1=App.ActiveDocument.addObject("Part::Feature",'pocket')
 		p1.Shape = aWire
 		p1.ViewObject.LineColor = (0.00,0.00,1.00)
@@ -3074,9 +3176,42 @@ def disk_switch_plate(centerx,centery,show):
 		fix2 = Part.Circle(Base.Vector(centerx +5 ,centery,0),Base.Vector(0,0,1),2.)
 		Part.show( fix2.toShape())
 				
-		
+	
+def PCB_holder():
 
-a = 3
+	
+	aWire=Part.Wire([ rect( 0,0 ,58,18 ) ])
+	p1=App.ActiveDocument.addObject("Part::Feature",'pocket')
+	p1.Shape = aWire
+	p1.ViewObject.LineColor = (0.00,0.00,1.00)				
+	
+			
+	aWire=Part.Wire([ rect( 0,0 ,55,18 ) ])
+	p1=App.ActiveDocument.addObject("Part::Feature",'inner_cut')
+	p1.Shape = aWire
+	p1.ViewObject.LineColor = (0.00,0.00,1.00)				
+
+	aWire=Part.Wire([ rect( 0,0 ,68,24 ) ])
+	p1=App.ActiveDocument.addObject("Part::Feature",'outer_cut')
+	p1.Shape = aWire
+	p1.ViewObject.LineColor = (0.00,0.00,1.00)
+
+
+	fix1 = Part.Circle(Base.Vector(centerx -15 ,centery,0),Base.Vector(0,0,1),1.1)
+	Part.show( fix1.toShape())
+		
+	fix2 = Part.Circle(Base.Vector(centerx +15 ,centery,0),Base.Vector(0,0,1),1.1)
+	Part.show( fix2.toShape())
+			
+
+	fix1 = Part.Circle(Base.Vector(centerx -31.5 ,centery,0),Base.Vector(0,0,1),1.1)
+	Part.show( fix1.toShape())
+		
+	fix2 = Part.Circle(Base.Vector(centerx +31.5 ,centery,0),Base.Vector(0,0,1),1.1)
+	Part.show( fix2.toShape())
+	
+
+a = 1
 
 
 if a ==1 :
@@ -3088,20 +3223,27 @@ if a ==1 :
 if a ==2 :
 	calcalpha()
 	print( width_plate)	
-	speaker_disk(1)
+	speaker_disk(0,0,0,1)
+	speaker_disk(60,0,180,1)
+	speaker_disk(120,0,0,1)
+	speaker_disk(180,0,180,1)
+	
 
-	Part.show( rect( 0,0,120,120 ) )
+	#Part.show( rect( 0,0,120,120 ) )
 
 if a == 3:
 	calcalpha()
 	
+	#this must be run for calculation
 	speaker_disk(0)
 
 
-	speaker_disk_protect(0,0)
-	speaker_disk_protect(120,0)
-	speaker_disk_protect(240,0)
-	speaker_disk_protect(360,0)
+	speaker_disk_protect(0,0, 3)
+	speaker_disk_protect(120,0, 3)
+	
+	speaker_disk_protect(240,0,3)
+	speaker_disk_protect(360,0,3)
+	
 	
 	
 
@@ -3111,7 +3253,9 @@ if a == 4:
 	print( width_plate)	
 
 	#speaker_plate(0.,0. ,width_plate, 60. )
-	speaker_plate(0.,0. ,width_plate, 56. )
+	#speaker_plate(0.,0. ,width_plate, 56. )
+	#speaker_plate_twosp(0.,0. ,width_plate, 127 )
+	speaker_plate_twosp(0.,0. ,width_plate, 114 )
 
 
 if a == 5: # 1 for main disk, 2 for both side disks
@@ -3188,5 +3332,8 @@ if a ==22 :
 	# 1 = switch_disk , 2 = button, 3 = Acryl guide
 	
 	disk_switch_plate(0,0,1)
+
+if a ==23 :
+	PCB_holder()
 
 
